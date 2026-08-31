@@ -2,6 +2,8 @@
 
 Canonical OpenAPI and JSON Schema artifacts for Waysdrop Partner SDKs.
 
+Licensed under the [MIT License](LICENSE).
+
 ## Contents
 
 - `openapi/partner-api.yaml` — Partner API (`/api/*`) OpenAPI 3.1 spec

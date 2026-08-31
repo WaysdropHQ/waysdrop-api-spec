@@ -1,0 +1,122 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/responses.json",
+    "title": "Waysdrop Partner API Responses",
+    "$defs": {
+        "DisplayMoneyLocal": {
+            "type": "object",
+            "properties": {
+                "currency": { "type": "string" },
+                "amount": { "type": "number" },
+                "symbol": { "type": "string" }
+            },
+            "required": ["currency", "amount"]
+        },
+        "DisplayMoney": {
+            "type": "object",
+            "properties": {
+                "usd": { "type": "number" },
+                "local": { "$ref": "#/$defs/DisplayMoneyLocal" }
+            },
+            "required": ["usd"]
+        },
+        "DistanceInfo": {
+            "type": "object",
+            "properties": {
+                "distanceKm": { "type": "number" },
+                "etaSeconds": { "type": "number" }
+            }
+        },
+        "GeoLocation": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "string" },
+                "addressLine1": { "type": "string" },
+                "lgaOrCity": { "type": "string" },
+                "state": { "type": "string" },
+                "country": { "type": "string" },
+                "countryCode": { "type": "string" },
+                "lat": { "type": "number" },
+                "lon": { "type": "number" },
+                "googlePlaceId": { "type": "string" }
+            }
+        },
+        "PaginatedMeta": {
+            "type": "object",
+            "properties": {
+                "total": { "type": "integer" },
+                "page": { "type": "integer" },
+                "limit": { "type": "integer" },
+                "totalPages": { "type": "integer" }
+            },
+            "required": ["total", "page", "limit", "totalPages"]
+        },
+        "AccountSummary": {
+            "type": "object",
+            "properties": {
+                "userId": { "type": "string" },
+                "countryCode": { "type": "string" },
+                "displayCurrency": { "type": "string" },
+                "merchantWalletCurrencyCode": { "type": "string" },
+                "storeProfile": {
+                    "type": ["object", "null"],
+                    "properties": {
+                        "id": { "type": "string" },
+                        "name": { "type": "string" },
+                        "tag": { "type": "string" }
+                    }
+                }
+            }
+        },
+        "MerchantWallet": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "string" },
+                "currencyCode": { "type": "string" },
+                "balance": { "type": "string" },
+                "balanceDisplay": { "$ref": "#/$defs/DisplayMoney" }
+            }
+        },
+        "ExchangeRateResponse": {
+            "type": "object",
+            "properties": {
+                "from": { "type": "string" },
+                "to": { "type": "string" },
+                "rate": { "type": "number" },
+                "isStale": { "type": "boolean" }
+            },
+            "required": ["from", "to", "rate"]
+        },
+        "ConvertCurrencyResponse": {
+            "type": "object",
+            "properties": {
+                "from": { "type": "string" },
+                "to": { "type": "string" },
+                "amount": { "type": "number" },
+                "convertedAmount": { "type": "number" },
+                "rate": { "type": "number" }
+            }
+        },
+        "PaymentCheckoutResponse": {
+            "type": "object",
+            "properties": {
+                "processor": {
+                    "type": "string",
+                    "enum": ["PAYSTACK", "NOMBA", "STRIPE"]
+                },
+                "reference": { "type": "string" },
+                "charge_currency": { "type": "string" },
+                "charge_amount": { "type": "number" },
+                "amount_usd": { "type": "number" },
+                "authorization_url": { "type": "string" },
+                "checkout_url": { "type": "string" }
+            },
+            "required": [
+                "processor",
+                "reference",
+                "charge_currency",
+                "charge_amount"
+            ]
+        }
+    }
+}
