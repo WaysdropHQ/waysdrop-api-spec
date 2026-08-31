@@ -1,0 +1,77 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/enums.json",
+    "title": "Waysdrop Enums",
+    "definitions": {
+        "DeliveryStatus": {
+            "type": "string",
+            "enum": [
+                "REQUEST_CREATED",
+                "ASSIGNING",
+                "ACCEPTED",
+                "AWAITING_COLLECTION",
+                "PACKAGE_COLLECTED",
+                "IN_TRANSIT",
+                "DELIVERED",
+                "CANCELLED"
+            ]
+        },
+        "UrgencyType": {
+            "type": "string",
+            "enum": ["PRIORITY", "STANDARD", "SCHEDULED"]
+        },
+        "CourierMatching": {
+            "type": "string",
+            "enum": ["ANYONE", "SPECIFIC", "MERCHANT_SPECIAL_COURIERS"]
+        },
+        "P2pDeliveryType": {
+            "type": "string",
+            "enum": ["PICKUP", "DROP_OFF"]
+        },
+        "DeliveryFeePayer": {
+            "type": "string",
+            "enum": ["CREATOR", "RECIPIENT", "SPLIT"]
+        },
+        "PodRemitTo": {
+            "type": "string",
+            "enum": ["MY_WALLET", "COURIER_WALLET"]
+        },
+        "PaymentMethodType": {
+            "type": "string",
+            "enum": ["WALLET", "CHECKOUT"]
+        },
+        "DeliveryType": {
+            "type": "string",
+            "enum": ["P2P", "ERRAND", "STORE", "PERSONAL"]
+        },
+        "RouteType": {
+            "type": "string",
+            "enum": ["INTRA_CITY", "INTER_CITY", "INTER_STATE", "INTER_COUNTRY"]
+        },
+        "WebhookEventName": {
+            "type": "string",
+            "enum": [
+                "p2p.delivery.created",
+                "p2p.delivery.cancelled",
+                "errand.delivery.created",
+                "errand.delivery.cancelled",
+                "delivery.request.accepted",
+                "delivery.request.declined",
+                "delivery.awaiting.collection",
+                "delivery.collected",
+                "delivery.in.transit",
+                "delivery.delivered",
+                "delivery.reassignment.created",
+                "delivery.reassignment.direct_assigned",
+                "delivery.reassignment.requested",
+                "delivery.reassignment.collected",
+                "payment.received",
+                "order.created",
+                "order.cancelled",
+                "order.confirmed",
+                "order.declined",
+                "order.requested"
+            ]
+        }
+    }
+}

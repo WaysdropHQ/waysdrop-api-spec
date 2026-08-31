@@ -1,0 +1,332 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/webhooks/events.json",
+    "title": "Waysdrop Webhook Event Payloads",
+    "oneOf": [
+        { "$ref": "#/$defs/P2pDeliveryCreated" },
+        { "$ref": "#/$defs/P2pDeliveryCancelled" },
+        { "$ref": "#/$defs/ErrandDeliveryCreated" },
+        { "$ref": "#/$defs/ErrandDeliveryCancelled" },
+        { "$ref": "#/$defs/DeliveryRequestAccepted" },
+        { "$ref": "#/$defs/DeliveryRequestDeclined" },
+        { "$ref": "#/$defs/DeliveryAwaitingCollection" },
+        { "$ref": "#/$defs/DeliveryCollected" },
+        { "$ref": "#/$defs/DeliveryInTransit" },
+        { "$ref": "#/$defs/DeliveryDelivered" },
+        { "$ref": "#/$defs/DeliveryReassignmentCreated" },
+        { "$ref": "#/$defs/DeliveryReassignmentDirectAssigned" },
+        { "$ref": "#/$defs/DeliveryReassignmentRequested" },
+        { "$ref": "#/$defs/DeliveryReassignmentCollected" },
+        { "$ref": "#/$defs/PaymentReceived" },
+        { "$ref": "#/$defs/OrderCreated" },
+        { "$ref": "#/$defs/OrderCancelled" },
+        { "$ref": "#/$defs/OrderConfirmed" },
+        { "$ref": "#/$defs/OrderDeclined" },
+        { "$ref": "#/$defs/OrderRequested" }
+    ],
+    "$defs": {
+        "DisplayMoney": {
+            "type": "object",
+            "properties": {
+                "usd": { "type": "number" },
+                "local": {
+                    "type": "object",
+                    "properties": {
+                        "currency": { "type": "string" },
+                        "amount": { "type": "number" },
+                        "symbol": { "type": "string" }
+                    }
+                }
+            },
+            "required": ["usd"]
+        },
+        "DeliveryBase": {
+            "type": "object",
+            "properties": {
+                "deliveryId": { "type": "string", "format": "uuid" },
+                "trackingId": { "type": "string" },
+                "type": { "type": "string" },
+                "status": { "type": "string" },
+                "routeType": { "type": "string" },
+                "courierProfileId": { "type": "string", "format": "uuid" },
+                "courierUserId": { "type": "string", "format": "uuid" },
+                "origin": { "type": "object" },
+                "destination": { "type": "object" },
+                "p2pDeliveryId": { "type": "string", "format": "uuid" },
+                "profileId": { "type": "string", "format": "uuid" }
+            }
+        },
+        "P2pDeliveryCreated": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "p2p.delivery.created" },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "status": { "type": "string" },
+                        "trackingId": { "type": "string" },
+                        "deliveryId": { "type": "string" },
+                        "p2pDeliveryId": { "type": "string" },
+                        "userId": { "type": "string" },
+                        "profileId": { "type": "string" },
+                        "totalWeight": { "type": "string" },
+                        "totalValue": { "type": "string" },
+                        "totalValueDisplay": { "$ref": "#/$defs/DisplayMoney" },
+                        "costs": { "type": "object" },
+                        "paymentMethodType": { "type": "string" },
+                        "courierSelection": { "type": "string" },
+                        "urgencyType": { "type": "string" },
+                        "origin": { "type": "object" },
+                        "destination": { "type": "object" },
+                        "createdAt": { "type": "string", "format": "date-time" }
+                    }
+                }
+            }
+        },
+        "P2pDeliveryCancelled": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "p2p.delivery.cancelled" },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "trackingId": { "type": "string" },
+                        "deliveryId": { "type": "string" },
+                        "p2pDeliveryId": { "type": "string" },
+                        "status": { "const": "CANCELLED" },
+                        "canceledAt": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "refundAmount": { "type": "string" },
+                        "refundAmountDisplay": {
+                            "$ref": "#/$defs/DisplayMoney"
+                        },
+                        "refundInputAmount": { "type": "string" },
+                        "refundCurrencyCode": { "type": "string" },
+                        "fxRateUsdToLocal": { "type": "number" }
+                    }
+                }
+            }
+        },
+        "ErrandDeliveryCreated": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "errand.delivery.created" },
+                "data": { "type": "object" }
+            }
+        },
+        "ErrandDeliveryCancelled": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "errand.delivery.cancelled" },
+                "data": { "type": "object" }
+            }
+        },
+        "DeliveryRequestAccepted": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.request.accepted" },
+                "data": {
+                    "allOf": [
+                        { "$ref": "#/$defs/DeliveryBase" },
+                        { "properties": { "status": { "const": "ACCEPTED" } } }
+                    ]
+                }
+            }
+        },
+        "DeliveryRequestDeclined": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.request.declined" },
+                "data": { "type": "object" }
+            }
+        },
+        "DeliveryAwaitingCollection": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.awaiting.collection" },
+                "data": {
+                    "allOf": [
+                        { "$ref": "#/$defs/DeliveryBase" },
+                        {
+                            "properties": {
+                                "status": { "const": "AWAITING_COLLECTION" },
+                                "proofCode": { "type": "string" },
+                                "updatedAt": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "DeliveryCollected": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.collected" },
+                "data": {
+                    "allOf": [
+                        { "$ref": "#/$defs/DeliveryBase" },
+                        {
+                            "properties": {
+                                "status": { "const": "PACKAGE_COLLECTED" },
+                                "collectedAt": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "deliveryCode": { "type": "string" }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "DeliveryInTransit": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.in.transit" },
+                "data": {
+                    "allOf": [
+                        { "$ref": "#/$defs/DeliveryBase" },
+                        {
+                            "properties": {
+                                "status": { "const": "IN_TRANSIT" },
+                                "inTransitAt": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "DeliveryDelivered": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.delivered" },
+                "data": {
+                    "allOf": [
+                        { "$ref": "#/$defs/DeliveryBase" },
+                        {
+                            "properties": {
+                                "status": { "const": "DELIVERED" },
+                                "deliveredAt": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "DeliveryReassignmentCreated": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.reassignment.created" },
+                "data": { "type": "object" }
+            }
+        },
+        "DeliveryReassignmentDirectAssigned": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.reassignment.direct_assigned" },
+                "data": { "type": "object" }
+            }
+        },
+        "DeliveryReassignmentRequested": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.reassignment.requested" },
+                "data": { "type": "object" }
+            }
+        },
+        "DeliveryReassignmentCollected": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "delivery.reassignment.collected" },
+                "data": { "type": "object" }
+            }
+        },
+        "PaymentReceived": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "payment.received" },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "amount": { "type": "string" },
+                        "amountDisplay": { "$ref": "#/$defs/DisplayMoney" },
+                        "currencyCode": { "type": "string" },
+                        "merchantReference": { "type": "string" },
+                        "reference": { "type": "string" },
+                        "customerEmail": { "type": "string" },
+                        "receivedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                }
+            }
+        },
+        "OrderCreated": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "order.created" },
+                "data": { "type": "object" }
+            }
+        },
+        "OrderCancelled": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "order.cancelled" },
+                "data": { "type": "object" }
+            }
+        },
+        "OrderConfirmed": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "order.confirmed" },
+                "data": { "type": "object" }
+            }
+        },
+        "OrderDeclined": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "order.declined" },
+                "data": { "type": "object" }
+            }
+        },
+        "OrderRequested": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "order.requested" },
+                "data": { "type": "object" }
+            }
+        }
+    }
+}

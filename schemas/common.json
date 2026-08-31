@@ -1,0 +1,56 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/common.json",
+    "title": "Waysdrop Common Schemas",
+    "definitions": {
+        "DisplayMoneyLocal": {
+            "type": "object",
+            "properties": {
+                "currency": { "type": "string" },
+                "amount": { "type": "number" },
+                "symbol": { "type": "string" }
+            },
+            "required": ["currency", "amount", "symbol"]
+        },
+        "DisplayMoney": {
+            "type": "object",
+            "properties": {
+                "usd": { "type": "number" },
+                "local": { "$ref": "#/definitions/DisplayMoneyLocal" }
+            },
+            "required": ["usd"]
+        },
+        "Address": {
+            "type": "object",
+            "properties": {
+                "address": { "type": "string" },
+                "lat": { "type": "number" },
+                "lon": { "type": "number" },
+                "googlePlaceId": { "type": "string" },
+                "floor": { "type": "string" },
+                "contactName": { "type": "string" },
+                "contactPhone": { "type": "string" }
+            }
+        },
+        "ApiSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "success": { "const": true },
+                "message": { "type": "string" },
+                "data": {}
+            },
+            "required": ["success", "message", "data"]
+        },
+        "ApiErrorResponse": {
+            "type": "object",
+            "properties": {
+                "statusCode": { "type": "integer" },
+                "message": {},
+                "path": { "type": "string" },
+                "details": { "type": "object" },
+                "quota": { "type": "object" }
+            },
+            "required": ["statusCode", "message"]
+        }
+    }
+}

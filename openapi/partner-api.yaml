@@ -1,0 +1,573 @@
+openapi: 3.1.0
+info:
+    title: Waysdrop Partner API
+    version: 1.0.0
+    description: |
+        Partner / merchant API. Authenticate with the `api-key` header.
+        Success responses wrap payloads in `{ success, message, data }`.
+        Errors return `{ statusCode, message, details?, path?, ... }`.
+servers:
+    - url: https://staging-api.waysdrop.com
+      description: Staging
+    - url: https://api.waysdrop.com
+      description: Production
+security:
+    - ApiKeyAuth: []
+tags:
+    - name: API
+      description: Partner API endpoints
+paths:
+    /api/countries:
+        get:
+            tags: [API]
+            operationId: listCountries
+            summary: Fetch available countries
+            parameters:
+                - $ref: "#/components/parameters/SearchQuery"
+                - $ref: "#/components/parameters/LimitQuery"
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/states:
+        get:
+            tags: [API]
+            operationId: listStates
+            summary: Fetch available states
+            parameters:
+                - $ref: "#/components/parameters/SearchQuery"
+                - $ref: "#/components/parameters/LimitQuery"
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/cities:
+        get:
+            tags: [API]
+            operationId: listCities
+            summary: Fetch available cities
+            parameters:
+                - $ref: "#/components/parameters/SearchQuery"
+                - $ref: "#/components/parameters/LimitQuery"
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/route:
+        post:
+            tags: [API]
+            operationId: getRoute
+            summary: Get route data between two addresses
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ApiGetRouteData"
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/fleet-types:
+        get:
+            tags: [API]
+            operationId: listFleetTypes
+            summary: Fetch available fleet types
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/pricing:
+        post:
+            tags: [API]
+            operationId: getPricing
+            summary: Get pricing for a delivery request
+            parameters:
+                - $ref: "#/components/parameters/DisplayCurrencyQuery"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ApiCalculateRouteCost"
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/request:
+        post:
+            tags: [API]
+            operationId: createDeliveryRequest
+            summary: Create a delivery request
+            parameters:
+                - $ref: "#/components/parameters/DisplayCurrencyQuery"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ApiCreateDeliveryRequest"
+            responses:
+                "201":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/request/{deliveryId}/cancel:
+        post:
+            tags: [API]
+            operationId: cancelDeliveryRequest
+            summary: Cancel an eligible delivery request
+            parameters:
+                - name: deliveryId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: uuid
+            responses:
+                "201":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/package:
+        post:
+            tags: [API]
+            operationId: createOrUpdatePackage
+            summary: Create or edit a package
+            parameters:
+                - $ref: "#/components/parameters/DisplayCurrencyQuery"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ApiCreateOrEditPackage"
+            responses:
+                "201":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/package/{packageId}:
+        delete:
+            tags: [API]
+            operationId: deletePackage
+            summary: Delete a package
+            parameters:
+                - name: packageId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: uuid
+            responses:
+                "204":
+                    description: Package deleted
+    /api/packages:
+        get:
+            tags: [API]
+            operationId: listPackages
+            summary: List unassigned packages
+            parameters:
+                - $ref: "#/components/parameters/DisplayCurrencyQuery"
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/wallet:
+        get:
+            tags: [API]
+            operationId: getWallet
+            summary: Get merchant wallet balance
+            parameters:
+                - $ref: "#/components/parameters/DisplayCurrencyQuery"
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/payments/checkout:
+        post:
+            tags: [API]
+            operationId: createPaymentCheckout
+            summary: Start hosted checkout for customer payment
+            parameters:
+                - $ref: "#/components/parameters/DisplayCurrencyQuery"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ApiCreatePaymentCheckout"
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/account:
+        get:
+            tags: [API]
+            operationId: getAccount
+            summary: Get merchant corridor and profile summary
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/exchange-rate:
+        get:
+            tags: [API]
+            operationId: getExchangeRate
+            summary: Get exchange rate between two ISO 4217 currencies
+            parameters:
+                - name: from
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      minLength: 3
+                      maxLength: 3
+                      example: USD
+                - name: to
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      minLength: 3
+                      maxLength: 3
+                      example: NGN
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/convert:
+        get:
+            tags: [API]
+            operationId: convertCurrency
+            summary: Convert an amount between two ISO 4217 currencies
+            parameters:
+                - name: from
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      minLength: 3
+                      maxLength: 3
+                - name: to
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      minLength: 3
+                      maxLength: 3
+                - name: amount
+                  in: query
+                  required: true
+                  schema:
+                      type: number
+                      minimum: 0
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/deliveries:
+        get:
+            tags: [API]
+            operationId: listDeliveries
+            summary: List deliveries for the current API key
+            parameters:
+                - $ref: "#/components/parameters/DisplayCurrencyQuery"
+                - name: status
+                  in: query
+                  schema:
+                      $ref: "#/components/schemas/DeliveryStatus"
+                - name: search
+                  in: query
+                  schema:
+                      type: string
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      minimum: 1
+                - name: limit
+                  in: query
+                  schema:
+                      type: integer
+                      minimum: 1
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+    /api/deliveries/{deliveryId}:
+        get:
+            tags: [API]
+            operationId: getDelivery
+            summary: Get a delivery by ID
+            parameters:
+                - name: deliveryId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: uuid
+                - $ref: "#/components/parameters/DisplayCurrencyQuery"
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+components:
+    securitySchemes:
+        ApiKeyAuth:
+            type: apiKey
+            in: header
+            name: api-key
+            description: wsp_live_… or wsp_staging_… (64 hex chars after prefix)
+    parameters:
+        SearchQuery:
+            name: search
+            in: query
+            schema:
+                type: string
+        LimitQuery:
+            name: limit
+            in: query
+            schema:
+                type: integer
+        DisplayCurrencyQuery:
+            name: currency
+            in: query
+            description: ISO 4217 override for *Display fields
+            schema:
+                type: string
+                minLength: 3
+                maxLength: 3
+                example: NGN
+    responses:
+        SuccessEnvelope:
+            description: Success
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/ApiSuccessResponse"
+        ErrorEnvelope:
+            description: Error
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/ApiErrorResponse"
+    schemas:
+        ApiSuccessResponse:
+            type: object
+            required: [success, message, data]
+            properties:
+                success:
+                    type: boolean
+                    example: true
+                message:
+                    type: string
+                data:
+                    description: Endpoint-specific payload
+        ApiErrorResponse:
+            type: object
+            required: [statusCode, message]
+            properties:
+                statusCode:
+                    type: integer
+                message:
+                    oneOf:
+                        - type: string
+                        - type: object
+                path:
+                    type: string
+                details:
+                    type: object
+                quota:
+                    type: object
+                    description: Present on 429 quota exceeded
+        RoutePoint:
+            type: object
+            properties:
+                address:
+                    type: string
+                    maxLength: 255
+                lat:
+                    type: number
+                lon:
+                    type: number
+                googlePlaceId:
+                    type: string
+        ApiGetRouteData:
+            type: object
+            required: [origin, destination]
+            properties:
+                origin:
+                    $ref: "#/components/schemas/RoutePoint"
+                destination:
+                    $ref: "#/components/schemas/RoutePoint"
+        ApiCalculateRouteCost:
+            allOf:
+                - $ref: "#/components/schemas/ApiGetRouteData"
+                - type: object
+                  properties:
+                      packagesId:
+                          type: array
+                          items:
+                              type: string
+                              format: uuid
+                      totalWeight:
+                          type: number
+                      totalValue:
+                          type: number
+                      urgencyType:
+                          $ref: "#/components/schemas/UrgencyType"
+                      deliveryDate:
+                          type: string
+                          format: date
+                      deliverySlot:
+                          type: string
+                      slot:
+                          type: string
+                      fleetTypeId:
+                          type: string
+                          format: uuid
+                      courierSelection:
+                          $ref: "#/components/schemas/CourierMatching"
+                      courierId:
+                          type: string
+                          format: uuid
+                      courierProfileId:
+                          type: string
+                          format: uuid
+                      deliveryFeePayer:
+                          $ref: "#/components/schemas/DeliveryFeePayer"
+                      currency:
+                          type: string
+        ApiCreateDeliveryRequest:
+            allOf:
+                - $ref: "#/components/schemas/ApiCalculateRouteCost"
+                - type: object
+                  required:
+                      - destinationContactEmail
+                      - destinationContactPhone
+                      - destinationContactName
+                      - packagesId
+                      - type
+                      - courierSelection
+                  properties:
+                      originContactEmail:
+                          type: string
+                          format: email
+                      originContactPhone:
+                          type: string
+                      originContactName:
+                          type: string
+                      destinationContactEmail:
+                          type: string
+                          format: email
+                      destinationContactPhone:
+                          type: string
+                      destinationContactName:
+                          type: string
+                      note:
+                          type: string
+                          maxLength: 128
+                      link3rdPartyByContactInfo:
+                          type: boolean
+                          default: false
+                      packagesId:
+                          type: array
+                          items:
+                              type: string
+                              format: uuid
+                      type:
+                          $ref: "#/components/schemas/P2pDeliveryType"
+                      requireCollectionProofCode:
+                          type: boolean
+                          default: true
+                      requireDeliveryProofCode:
+                          type: boolean
+                          default: true
+                      payPackageValue:
+                          type: boolean
+                      payOnDelivery:
+                          type: boolean
+                      podRemitTo:
+                          $ref: "#/components/schemas/PodRemitTo"
+                      podCourierProfileId:
+                          type: string
+                          format: uuid
+                      paymentMethodType:
+                          type: string
+                          enum: [WALLET, CHECKOUT]
+                      notify3rdParty:
+                          type: boolean
+                      callbackUrl:
+                          type: string
+                          format: uri
+        ApiCreateOrEditPackage:
+            type: object
+            properties:
+                packageId:
+                    type: string
+                    format: uuid
+                packageType:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                    maxLength: 128
+                quantity:
+                    type: integer
+                value:
+                    type: number
+                size:
+                    $ref: "#/components/schemas/DeliveryPackageSize"
+                weight:
+                    type: number
+                inputCurrency:
+                    type: string
+                image:
+                    type: string
+                    format: uri
+        ApiCreatePaymentCheckout:
+            type: object
+            required: [amount, customerEmail]
+            properties:
+                amount:
+                    type: number
+                    minimum: 0
+                    exclusiveMinimum: true
+                customerEmail:
+                    type: string
+                    format: email
+                merchantReference:
+                    type: string
+                    maxLength: 128
+                currencyCode:
+                    type: string
+                inputCurrency:
+                    type: string
+                callbackUrl:
+                    type: string
+        DisplayMoney:
+            type: object
+            required: [usd]
+            properties:
+                usd:
+                    type: number
+                local:
+                    type: object
+                    properties:
+                        currency:
+                            type: string
+                        amount:
+                            type: number
+                        symbol:
+                            type: string
+        DeliveryStatus:
+            type: string
+            enum:
+                - REQUEST_CREATED
+                - ASSIGNING
+                - ACCEPTED
+                - AWAITING_COLLECTION
+                - PACKAGE_COLLECTED
+                - IN_TRANSIT
+                - DELIVERED
+                - CANCELLED
+        UrgencyType:
+            type: string
+            enum: [PRIORITY, STANDARD, SCHEDULED]
+        CourierMatching:
+            type: string
+            enum: [ANYONE, SPECIFIC, MERCHANT_SPECIAL_COURIERS]
+        P2pDeliveryType:
+            type: string
+            enum: [PICKUP, DROP_OFF]
+        DeliveryFeePayer:
+            type: string
+            enum: [CREATOR, RECIPIENT, SPLIT]
+        PodRemitTo:
+            type: string
+            enum: [MY_WALLET, COURIER_WALLET]
+        DeliveryPackageSize:
+            type: string
+            enum: [SMALL, MEDIUM, LARGE, EXTRA_LARGE]

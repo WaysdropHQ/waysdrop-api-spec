@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/webhooks/envelope.json",
+    "title": "Waysdrop Webhook Envelope",
+    "type": "object",
+    "required": ["event", "data"],
+    "properties": {
+        "event": {
+            "$ref": "../enums.json#/definitions/WebhookEventName"
+        },
+        "data": {
+            "type": "object"
+        }
+    }
+}
