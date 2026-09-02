@@ -1,0 +1,14 @@
+{
+    "issuer": "https://staging-api.waysdrop.com",
+    "authorization_endpoint": "https://staging-api.waysdrop.com/oauth/authorize",
+    "token_endpoint": "https://staging-api.waysdrop.com/oauth/token",
+    "userinfo_endpoint": "https://staging-api.waysdrop.com/oauth/userinfo",
+    "revocation_endpoint": "https://staging-api.waysdrop.com/oauth/revoke",
+    "response_types_supported": ["code"],
+    "grant_types_supported": ["authorization_code", "refresh_token"],
+    "subject_types_supported": ["public"],
+    "id_token_signing_alg_values_supported": ["HS256"],
+    "token_endpoint_auth_methods_supported": ["client_secret_post", "none"],
+    "code_challenge_methods_supported": ["S256", "plain"],
+    "scopes_supported": ["openid", "profile", "email", "store", "courier"]
+}

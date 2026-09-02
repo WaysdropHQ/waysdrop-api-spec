@@ -1,0 +1,17 @@
+{
+    "sub": "0195a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b",
+    "email": "user@example.com",
+    "email_verified": true,
+    "name": "Ada Lovelace",
+    "picture": "https://cdn.waysdrop.com/photos/user.jpg",
+    "phone": "+2348123456789",
+    "phone_verified": true,
+    "personal_profile": {
+        "id": "0195a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5c",
+        "name": "Ada Lovelace",
+        "tag": "ada-lovelace",
+        "profile_photo": "https://cdn.waysdrop.com/photos/user.jpg"
+    },
+    "store_profiles": [],
+    "courier_profiles": []
+}

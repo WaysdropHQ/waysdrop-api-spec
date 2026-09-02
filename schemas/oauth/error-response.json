@@ -1,0 +1,12 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/oauth/error-response.json",
+    "title": "OAuthErrorResponse",
+    "type": "object",
+    "properties": {
+        "error": { "type": "string" },
+        "error_description": { "type": "string" },
+        "statusCode": { "type": "integer" },
+        "message": {}
+    }
+}

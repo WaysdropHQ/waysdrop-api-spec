@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/oauth/enums.json",
+    "title": "OAuth Enums",
+    "definitions": {
+        "OAuthScope": {
+            "type": "string",
+            "enum": ["openid", "profile", "email", "store", "courier"]
+        },
+        "OAuthClientType": {
+            "type": "string",
+            "enum": ["CONFIDENTIAL", "PUBLIC"]
+        },
+        "OAuthGrantType": {
+            "type": "string",
+            "enum": ["authorization_code", "refresh_token"]
+        },
+        "CodeChallengeMethod": {
+            "type": "string",
+            "enum": ["S256", "plain"]
+        }
+    }
+}

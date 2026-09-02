@@ -1,0 +1,149 @@
+openapi: 3.1.0
+info:
+    title: Waysdrop OAuth Protocol
+    version: 2.0.0
+    description: |
+        OpenID Connect / OAuth 2.0 protocol for Sign in with Waysdrop.
+        Token, revoke, and userinfo responses are **raw JSON** — not wrapped in `{ success, data }`.
+        The authorize endpoint is a browser redirect; SDKs build the URL rather than calling it via HTTP.
+servers:
+    - url: https://staging-api.waysdrop.com
+      description: Staging
+    - url: https://api.waysdrop.com
+      description: Production
+tags:
+    - name: OAuth
+      description: Integrator-facing OAuth protocol
+paths:
+    /.well-known/openid-configuration:
+        get:
+            tags: [OAuth]
+            operationId: getOpenIdConfiguration
+            summary: OpenID Connect discovery document
+            responses:
+                "200":
+                    description: Discovery document
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "../schemas/oauth/discovery.json"
+    /oauth/authorize:
+        get:
+            tags: [OAuth]
+            operationId: oauthAuthorize
+            summary: OAuth authorization endpoint (browser redirect)
+            description: |
+                Redirect the user's browser here. Do not call from server-side SDK HTTP clients.
+            parameters:
+                - name: client_id
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: redirect_uri
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      format: uri
+                - name: response_type
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      enum: [code]
+                - name: scope
+                  in: query
+                  schema:
+                      type: string
+                      example: openid profile email
+                - name: state
+                  in: query
+                  schema:
+                      type: string
+                - name: code_challenge
+                  in: query
+                  schema:
+                      type: string
+                - name: code_challenge_method
+                  in: query
+                  schema:
+                      type: string
+                      enum: [S256, plain]
+            responses:
+                "302":
+                    description: Redirect to login, consent, or callback with authorization code
+    /oauth/token:
+        post:
+            tags: [OAuth]
+            operationId: oauthToken
+            summary: Exchange authorization code or refresh token
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "../schemas/oauth/token-request.json"
+            responses:
+                "200":
+                    description: Token response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "../schemas/oauth/token-response.json"
+                "400":
+                    description: OAuth error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "../schemas/oauth/error-response.json"
+                "401":
+                    description: OAuth error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "../schemas/oauth/error-response.json"
+    /oauth/revoke:
+        post:
+            tags: [OAuth]
+            operationId: oauthRevoke
+            summary: Revoke a refresh token
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "../schemas/oauth/revoke-request.json"
+            responses:
+                "200":
+                    description: Revocation result
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "../schemas/oauth/revoke-response.json"
+    /oauth/userinfo:
+        get:
+            tags: [OAuth]
+            operationId: oauthUserinfo
+            summary: OAuth userinfo endpoint
+            security:
+                - BearerAuth: []
+            responses:
+                "200":
+                    description: Scope-gated user profile
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "../schemas/oauth/userinfo-response.json"
+                "401":
+                    description: OAuth error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "../schemas/oauth/error-response.json"
+components:
+    securitySchemes:
+        BearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT

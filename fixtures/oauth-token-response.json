@@ -1,0 +1,7 @@
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test",
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "refresh_token": "wdor_a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234",
+    "scope": "openid profile email"
+}

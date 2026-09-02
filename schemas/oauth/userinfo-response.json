@@ -1,0 +1,43 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/oauth/userinfo-response.json",
+    "title": "UserInfoResponse",
+    "type": "object",
+    "properties": {
+        "sub": { "type": "string", "format": "uuid" },
+        "email": { "type": ["string", "null"] },
+        "email_verified": { "type": "boolean" },
+        "name": { "type": ["string", "null"] },
+        "picture": { "type": ["string", "null"], "format": "uri" },
+        "phone": { "type": ["string", "null"] },
+        "phone_verified": { "type": "boolean" },
+        "personal_profile": {
+            "oneOf": [
+                { "$ref": "#/definitions/ProfileSummary" },
+                { "type": "null" }
+            ]
+        },
+        "store_profiles": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/ProfileSummary" }
+        },
+        "courier_profiles": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/ProfileSummary" }
+        }
+    },
+    "required": ["sub"],
+    "definitions": {
+        "ProfileSummary": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "string", "format": "uuid" },
+                "name": { "type": ["string", "null"] },
+                "tag": { "type": ["string", "null"] },
+                "description": { "type": ["string", "null"] },
+                "profile_photo": { "type": ["string", "null"], "format": "uri" }
+            },
+            "required": ["id"]
+        }
+    }
+}

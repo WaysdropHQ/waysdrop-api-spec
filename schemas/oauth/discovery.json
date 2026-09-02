@@ -1,0 +1,51 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/oauth/discovery.json",
+    "title": "DiscoveryDocument",
+    "type": "object",
+    "properties": {
+        "issuer": { "type": "string", "format": "uri" },
+        "authorization_endpoint": { "type": "string", "format": "uri" },
+        "token_endpoint": { "type": "string", "format": "uri" },
+        "userinfo_endpoint": { "type": "string", "format": "uri" },
+        "revocation_endpoint": { "type": "string", "format": "uri" },
+        "response_types_supported": {
+            "type": "array",
+            "items": { "type": "string" }
+        },
+        "grant_types_supported": {
+            "type": "array",
+            "items": { "type": "string" }
+        },
+        "subject_types_supported": {
+            "type": "array",
+            "items": { "type": "string" }
+        },
+        "id_token_signing_alg_values_supported": {
+            "type": "array",
+            "items": { "type": "string" }
+        },
+        "token_endpoint_auth_methods_supported": {
+            "type": "array",
+            "items": { "type": "string" }
+        },
+        "code_challenge_methods_supported": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["S256", "plain"] }
+        },
+        "scopes_supported": {
+            "type": "array",
+            "items": { "$ref": "enums.json#/definitions/OAuthScope" }
+        }
+    },
+    "required": [
+        "issuer",
+        "authorization_endpoint",
+        "token_endpoint",
+        "userinfo_endpoint",
+        "revocation_endpoint",
+        "response_types_supported",
+        "grant_types_supported",
+        "scopes_supported"
+    ]
+}

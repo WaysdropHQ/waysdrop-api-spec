@@ -8,28 +8,30 @@ Licensed under the [MIT License](LICENSE).
 
 ## Contents
 
-| Path | Description |
-| ---- | ----------- |
-| `openapi/partner-api.yaml` | Partner API (`/api/*`) — 18 endpoints, OpenAPI 3.1 |
-| `schemas/common.json` | Shared types (`DisplayMoney`, envelopes, errors) |
-| `schemas/enums.json` | Route types, delivery status, package size, etc. |
-| `schemas/responses.json` | Response DTO shapes |
-| `schemas/webhooks/` | Webhook envelope + 19 event payloads |
-| `fixtures/` | Shared test vectors (signature, envelopes, errors) |
-| `scripts/` | Validation and export helpers |
+| Path                          | Description                                                |
+| ----------------------------- | ---------------------------------------------------------- |
+| `openapi/partner-api.yaml`    | Partner API (`/api/*`) — 18 endpoints, OpenAPI 3.1         |
+| `openapi/oauth-protocol.yaml` | OAuth / OIDC protocol — discovery, token, userinfo, revoke |
+| `schemas/common.json`         | Shared types (`DisplayMoney`, envelopes, errors)           |
+| `schemas/enums.json`          | Route types, delivery status, package size, etc.           |
+| `schemas/responses.json`      | Response DTO shapes                                        |
+| `schemas/oauth/`              | OAuth discovery, token, userinfo, error schemas            |
+| `schemas/webhooks/`           | Webhook envelope + 19 event payloads                       |
+| `fixtures/`                   | Shared test vectors (signature, OAuth, envelopes, errors)  |
+| `scripts/`                    | Validation and export helpers                              |
 
 ## Official SDKs
 
 These libraries implement this spec (v1):
 
-| Language | Package | Repository |
-| -------- | ------- | ---------- |
-| Node.js / TypeScript | `@waysdrop/sdk` | [waysdrop-node-sdk](https://github.com/WaysdropHQ/waysdrop-node-sdk) |
-| Python | `waysdrop` | [waysdrop-python-sdk](https://github.com/WaysdropHQ/waysdrop-python-sdk) |
-| Go | `github.com/waysdrop/waysdrop-go` | [waysdrop-go-sdk](https://github.com/WaysdropHQ/waysdrop-go-sdk) |
-| PHP | `waysdrop/sdk` | [waysdrop-php-sdk](https://github.com/WaysdropHQ/waysdrop-php-sdk) |
-| Rust | `waysdrop` | [waysdrop-rust-sdk](https://github.com/WaysdropHQ/waysdrop-rust-sdk) |
-| Dart / Flutter | `waysdrop` | [waysdrop-flutter-sdk](https://github.com/WaysdropHQ/waysdrop-flutter-sdk) |
+| Language             | Package                           | Repository                                                                 |
+| -------------------- | --------------------------------- | -------------------------------------------------------------------------- |
+| Node.js / TypeScript | `@waysdrop/sdk`                   | [waysdrop-node-sdk](https://github.com/WaysdropHQ/waysdrop-node-sdk)       |
+| Python               | `waysdrop`                        | [waysdrop-python-sdk](https://github.com/WaysdropHQ/waysdrop-python-sdk)   |
+| Go                   | `github.com/waysdrop/waysdrop-go` | [waysdrop-go-sdk](https://github.com/WaysdropHQ/waysdrop-go-sdk)           |
+| PHP                  | `waysdrop/sdk`                    | [waysdrop-php-sdk](https://github.com/WaysdropHQ/waysdrop-php-sdk)         |
+| Rust                 | `waysdrop`                        | [waysdrop-rust-sdk](https://github.com/WaysdropHQ/waysdrop-rust-sdk)       |
+| Dart / Flutter       | `waysdrop`                        | [waysdrop-flutter-sdk](https://github.com/WaysdropHQ/waysdrop-flutter-sdk) |
 
 OAuth (Sign in with Waysdrop) schemas will land here in **v2** before SDK OAuth modules ship.
 
@@ -79,9 +81,9 @@ Verify against **raw request bytes**, never re-serialized JSON. The canonical te
 
 Spec releases use git tags: `v1.0.0`, `v1.1.0`, `v2.0.0` (OAuth).
 
-| Spec tag | Scope |
-| -------- | ----- |
-| v1.x | Partner API + webhooks |
-| v2.x | OAuth protocol schemas (planned) |
+| Spec tag | Scope                            |
+| -------- | -------------------------------- |
+| v1.x     | Partner API + webhooks           |
+| v2.x     | OAuth protocol schemas (planned) |
 
 See [CHANGELOG.md](CHANGELOG.md).

@@ -2,10 +2,11 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SPEC="$ROOT/openapi/partner-api.yaml"
+PARTNER_SPEC="$ROOT/openapi/partner-api.yaml"
+OAUTH_SPEC="$ROOT/openapi/oauth-protocol.yaml"
 EVENTS="$ROOT/schemas/enums.json"
 
-required_paths=(
+required_partner_paths=(
   "/api/countries"
   "/api/states"
   "/api/cities"
@@ -23,13 +24,75 @@ required_paths=(
   "/api/deliveries"
 )
 
+required_oauth_paths=(
+  "/.well-known/openid-configuration"
+  "/oauth/authorize"
+  "/oauth/token"
+  "/oauth/revoke"
+  "/oauth/userinfo"
+)
+
+required_oauth_schemas=(
+  "discovery.json"
+  "token-response.json"
+  "revoke-response.json"
+  "userinfo-response.json"
+  "error-response.json"
+  "enums.json"
+)
+
+required_oauth_fixtures=(
+  "oauth-discovery.json"
+  "oauth-token-response.json"
+  "oauth-userinfo-profile.json"
+  "oauth-pkce.json"
+)
+
 echo "Validating partner-api.yaml paths..."
-for path in "${required_paths[@]}"; do
-  if ! grep -q "$path:" "$SPEC"; then
+for path in "${required_partner_paths[@]}"; do
+  if ! grep -q "$path:" "$PARTNER_SPEC"; then
     echo "MISSING path: $path"
     exit 1
   fi
 done
+
+echo "Validating oauth-protocol.yaml paths..."
+for path in "${required_oauth_paths[@]}"; do
+  if ! grep -q "$path:" "$OAUTH_SPEC"; then
+    echo "MISSING OAuth path: $path"
+    exit 1
+  fi
+done
+
+echo "Validating OAuth JSON schemas..."
+for schema in "${required_oauth_schemas[@]}"; do
+  if [[ ! -f "$ROOT/schemas/oauth/$schema" ]]; then
+    echo "MISSING OAuth schema: $schema"
+    exit 1
+  fi
+  node -e "JSON.parse(require('fs').readFileSync('$ROOT/schemas/oauth/$schema','utf8'))"
+done
+
+echo "Validating OAuth fixtures..."
+for fixture in "${required_oauth_fixtures[@]}"; do
+  if [[ ! -f "$ROOT/fixtures/$fixture" ]]; then
+    echo "MISSING OAuth fixture: $fixture"
+    exit 1
+  fi
+  node -e "JSON.parse(require('fs').readFileSync('$ROOT/fixtures/$fixture','utf8'))"
+done
+
+echo "Validating PKCE fixture vector..."
+node -e "
+const crypto = require('crypto');
+const fs = require('fs');
+const pkce = JSON.parse(fs.readFileSync('$ROOT/fixtures/oauth-pkce.json','utf8'));
+const digest = crypto.createHash('sha256').update(pkce.code_verifier).digest('base64url');
+if (digest !== pkce.code_challenge) {
+  console.error('PKCE vector mismatch');
+  process.exit(1);
+}
+"
 
 echo "Validating webhook event catalog..."
 event_count=$(node -e "
