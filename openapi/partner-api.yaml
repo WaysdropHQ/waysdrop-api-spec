@@ -1,9 +1,11 @@
 openapi: 3.1.0
 info:
     title: Waysdrop Partner API
-    version: 1.0.0
+    version: 2.1.0
     description: |
         Partner / merchant API. Authenticate with the `api-key` header.
+        Secret keys: `wsp_(live|staging)_…` — server-side only.
+        Public keys: `wsp_pub_(live|staging)_…` — browser-safe on quote/geo and payment routes (checkout, payment lookup).
         Success responses wrap payloads in `{ success, message, data }`.
         Errors return `{ statusCode, message, details?, path?, ... }`.
 servers:
@@ -186,6 +188,23 @@ paths:
             responses:
                 "200":
                     $ref: "#/components/responses/SuccessEnvelope"
+    /api/payments/by-external-reference/{externalReference}:
+        get:
+            tags: [API]
+            operationId: getPaymentByExternalReference
+            summary: Look up a payment by external reference
+            parameters:
+                - name: externalReference
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      maxLength: 128
+            responses:
+                "200":
+                    $ref: "#/components/responses/SuccessEnvelope"
+                "404":
+                    description: Payment not found
     /api/account:
         get:
             tags: [API]

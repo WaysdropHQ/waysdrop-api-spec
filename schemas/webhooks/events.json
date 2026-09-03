@@ -18,6 +18,7 @@
         { "$ref": "#/$defs/DeliveryReassignmentRequested" },
         { "$ref": "#/$defs/DeliveryReassignmentCollected" },
         { "$ref": "#/$defs/PaymentReceived" },
+        { "$ref": "#/$defs/RefundProcessed" },
         { "$ref": "#/$defs/OrderCreated" },
         { "$ref": "#/$defs/OrderCancelled" },
         { "$ref": "#/$defs/OrderConfirmed" },
@@ -45,6 +46,7 @@
             "properties": {
                 "deliveryId": { "type": "string", "format": "uuid" },
                 "trackingId": { "type": "string" },
+                "externalReference": { "type": "string" },
                 "type": { "type": "string" },
                 "status": { "type": "string" },
                 "routeType": { "type": "string" },
@@ -278,9 +280,33 @@
                         "amountDisplay": { "$ref": "#/$defs/DisplayMoney" },
                         "currencyCode": { "type": "string" },
                         "merchantReference": { "type": "string" },
+                        "externalReference": { "type": "string" },
                         "reference": { "type": "string" },
                         "customerEmail": { "type": "string" },
                         "receivedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                }
+            }
+        },
+        "RefundProcessed": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "refund.processed" },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "deliveryId": { "type": "string", "format": "uuid" },
+                        "trackingId": { "type": "string" },
+                        "externalReference": { "type": "string" },
+                        "refundAmount": { "type": "string" },
+                        "refundSource": { "type": "string" },
+                        "refundKind": { "type": "string" },
+                        "reference": { "type": "string" },
+                        "processedAt": {
                             "type": "string",
                             "format": "date-time"
                         }
