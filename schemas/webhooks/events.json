@@ -2,6 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://waysdrop.com/schemas/webhooks/events.json",
     "title": "Waysdrop Webhook Event Payloads",
+    "description": "Every address object in a payload, under any key (origin, destination, storeLocation, handoverLocation, nested deliveries[].origin, ...), is a PartnerAddress (frozen per D26 #14).",
     "oneOf": [
         { "$ref": "#/$defs/P2pDeliveryCreated" },
         { "$ref": "#/$defs/P2pDeliveryCancelled" },
@@ -23,9 +24,16 @@
         { "$ref": "#/$defs/OrderCancelled" },
         { "$ref": "#/$defs/OrderConfirmed" },
         { "$ref": "#/$defs/OrderDeclined" },
-        { "$ref": "#/$defs/OrderRequested" }
+        { "$ref": "#/$defs/OrderRequested" },
+        { "$ref": "#/$defs/CheckoutPaid" }
     ],
     "$defs": {
+        "PartnerAddress": {
+            "$ref": "../common.json#/definitions/PartnerAddress"
+        },
+        "NullablePartnerAddress": {
+            "anyOf": [{ "$ref": "#/$defs/PartnerAddress" }, { "type": "null" }]
+        },
         "DisplayMoney": {
             "type": "object",
             "properties": {
@@ -52,8 +60,8 @@
                 "routeType": { "type": "string" },
                 "courierProfileId": { "type": "string", "format": "uuid" },
                 "courierUserId": { "type": "string", "format": "uuid" },
-                "origin": { "type": "object" },
-                "destination": { "type": "object" },
+                "origin": { "$ref": "#/$defs/NullablePartnerAddress" },
+                "destination": { "$ref": "#/$defs/NullablePartnerAddress" },
                 "p2pDeliveryId": { "type": "string", "format": "uuid" },
                 "profileId": { "type": "string", "format": "uuid" }
             }
@@ -79,8 +87,10 @@
                         "paymentMethodType": { "type": "string" },
                         "courierSelection": { "type": "string" },
                         "urgencyType": { "type": "string" },
-                        "origin": { "type": "object" },
-                        "destination": { "type": "object" },
+                        "origin": { "$ref": "#/$defs/NullablePartnerAddress" },
+                        "destination": {
+                            "$ref": "#/$defs/NullablePartnerAddress"
+                        },
                         "createdAt": { "type": "string", "format": "date-time" }
                     }
                 }
@@ -182,12 +192,21 @@
                         { "$ref": "#/$defs/DeliveryBase" },
                         {
                             "properties": {
-                                "status": { "const": "PACKAGE_COLLECTED" },
+                                "status": {
+                                    "enum": [
+                                        "PACKAGE_COLLECTED",
+                                        "ORDER_COLLECTED"
+                                    ],
+                                    "description": "ORDER_COLLECTED for store-order deliveries."
+                                },
                                 "collectedAt": {
                                     "type": "string",
                                     "format": "date-time"
                                 },
-                                "deliveryCode": { "type": "string" }
+                                "deliveryCode": {
+                                    "type": ["string", "null"],
+                                    "description": "Deprecated. Always null from the V2 release (it used to carry the recipient's delivery code). The key is kept so parsers see the same shape."
+                                }
                             }
                         }
                     ]
@@ -319,7 +338,16 @@
             "required": ["event", "data"],
             "properties": {
                 "event": { "const": "order.created" },
-                "data": { "type": "object" }
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "checkoutSessionId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Set for orders placed through a V2 checkout session (additive)."
+                        }
+                    }
+                }
             }
         },
         "OrderCancelled": {
@@ -327,7 +355,16 @@
             "required": ["event", "data"],
             "properties": {
                 "event": { "const": "order.cancelled" },
-                "data": { "type": "object" }
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "checkoutSessionId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Set for orders placed through a V2 checkout session (additive)."
+                        }
+                    }
+                }
             }
         },
         "OrderConfirmed": {
@@ -352,6 +389,41 @@
             "properties": {
                 "event": { "const": "order.requested" },
                 "data": { "type": "object" }
+            }
+        },
+        "CheckoutPaid": {
+            "type": "object",
+            "required": ["event", "data"],
+            "properties": {
+                "event": { "const": "checkout.paid" },
+                "data": {
+                    "type": "object",
+                    "required": [
+                        "checkoutSessionId",
+                        "orderIds",
+                        "amount",
+                        "reference"
+                    ],
+                    "properties": {
+                        "checkoutSessionId": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "orderIds": {
+                            "type": "array",
+                            "items": { "type": "string", "format": "uuid" }
+                        },
+                        "amount": {
+                            "type": "string",
+                            "pattern": "^[0-9]+(\\.[0-9]+)?$",
+                            "description": "USD total as a decimal string (Prisma Decimal), e.g. \"81.60\"."
+                        },
+                        "reference": {
+                            "type": ["string", "null"],
+                            "description": "Payment reference."
+                        }
+                    }
+                }
             }
         }
     }

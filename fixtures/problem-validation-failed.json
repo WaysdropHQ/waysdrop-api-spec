@@ -1,0 +1,16 @@
+{
+    "type": "urn:waysdrop:problem:VALIDATION_FAILED",
+    "title": "Bad Request",
+    "status": 400,
+    "detail": "url must be a URL address; enabledEvents should not be empty",
+    "instance": "/v2/webhooks/endpoints",
+    "code": "VALIDATION_FAILED",
+    "correlationId": "0f9a6c1e-7b8d-4c2a-9e51-3d2f1a7b6c93",
+    "statusCode": 400,
+    "message": "url must be a URL address; enabledEvents should not be empty",
+    "details": { "code": "VALIDATION_FAILED" },
+    "errors": [
+        { "field": "url", "message": "url must be a URL address" },
+        { "field": "enabledEvents", "message": "enabledEvents should not be empty" }
+    ]
+}

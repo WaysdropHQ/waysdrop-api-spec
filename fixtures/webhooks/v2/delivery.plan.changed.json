@@ -1,0 +1,37 @@
+{
+  "id": "evt_0193b2f4-1c2d-7a3b-9c4d-5e6f7a8b9c0b",
+  "type": "delivery.plan.changed",
+  "apiVersion": "2026-11-25",
+  "createdAt": "2026-11-25T10:30:00.000Z",
+  "livemode": true,
+  "account": {
+    "id": "0193b2f4-0000-7000-8000-0000000acc01"
+  },
+  "sequence": 12,
+  "data": {
+    "object": {
+      "object": "delivery_plan",
+      "id": "0193b2f4-0000-7000-8000-00000000d001",
+      "deliveryId": "0193b2f4-0000-7000-8000-00000000d001",
+      "version": 2,
+      "stops": [
+        {
+          "id": "0193b2f4-0000-7000-8000-000000005000",
+          "sequence": 0,
+          "position": 0,
+          "kind": "PICKUP",
+          "status": "COMPLETED"
+        },
+        {
+          "id": "0193b2f4-0000-7000-8000-000000005001",
+          "sequence": 1,
+          "position": 1,
+          "kind": "DROPOFF",
+          "status": "EN_ROUTE"
+        }
+      ],
+      "totalDistanceM": 8421,
+      "etaS": 1261
+    }
+  }
+}

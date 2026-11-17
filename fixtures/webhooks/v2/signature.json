@@ -1,0 +1,263 @@
+{
+  "description": "Waysdrop webhooks v2 signature vectors. Waysdrop-Signature: t=<unix seconds>,v1=<hex HMAC-SHA256(secret, t + '.' + rawBody)>[,v1=…]. Verify against the raw body bytes; accept when any v1 matches any configured secret (constant-time) and |now - t| <= toleranceSec. Unknown schemes and non-lowercase-hex v1 values are ignored. `expected` is OK or the error code the SDK must raise.",
+  "algorithm": "HMAC-SHA256",
+  "header": "Waysdrop-Signature",
+  "defaultToleranceSec": 300,
+  "errorCodes": [
+    "MISSING_HEADER",
+    "MALFORMED_HEADER",
+    "NO_SECRETS",
+    "TIMESTAMP_OUT_OF_TOLERANCE",
+    "SIGNATURE_MISMATCH",
+    "INVALID_JSON"
+  ],
+  "signing": [
+    {
+      "name": "single-secret",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "timestamp": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f"
+    },
+    {
+      "name": "rotation-two-secrets",
+      "secrets": [
+        "whsec_test_secret_1",
+        "whsec_test_secret_2"
+      ],
+      "timestamp": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f,v1=cc271102883116964c1b522b03b45df168b1ad736097dd8618344c099ae63d02"
+    },
+    {
+      "name": "ping-fixture-body",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "timestamp": 1764064800,
+      "rawBody": "{\"id\":\"evt_0193b2f4-1c2d-7a3b-9c4d-5e6f7a8b9c17\",\"type\":\"ping\",\"apiVersion\":\"2026-11-25\",\"createdAt\":\"2026-11-25T10:30:00.000Z\",\"livemode\":true,\"account\":{\"id\":\"0193b2f4-0000-7000-8000-0000000acc01\"},\"sequence\":24,\"data\":{\"object\":{\"object\":\"ping\",\"id\":\"0193b2f4-0000-7000-8000-00000000a0e1\",\"message\":\"Test event from Waysdrop. Your endpoint is set up correctly.\"}}}",
+      "header": "t=1764064800,v1=6da58a0c4802876fb15171f5078b36f7611b563e33f12e747f20819570cab76c"
+    },
+    {
+      "name": "utf8-body",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "timestamp": 1764064800,
+      "rawBody": "{\"id\":\"evt_2\",\"note\":\"Ìbàdàn – café ✓\"}",
+      "header": "t=1764064800,v1=8bb3d06ceefeaf70b347b4973c67bbb0e57d78738c33bdad491bf1b604a667fc"
+    }
+  ],
+  "verification": [
+    {
+      "name": "valid",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "OK"
+    },
+    {
+      "name": "valid-rotation-old-secret-only",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f,v1=cc271102883116964c1b522b03b45df168b1ad736097dd8618344c099ae63d02",
+      "secrets": [
+        "whsec_test_secret_2"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "OK"
+    },
+    {
+      "name": "valid-any-secret-of-several",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_other",
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "OK"
+    },
+    {
+      "name": "tolerance-boundary-inclusive",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764065100,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "OK"
+    },
+    {
+      "name": "too-old",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764065101,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "TIMESTAMP_OUT_OF_TOLERANCE"
+    },
+    {
+      "name": "from-the-future",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064499,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "TIMESTAMP_OUT_OF_TOLERANCE"
+    },
+    {
+      "name": "wrong-secret",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_wrong"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "SIGNATURE_MISMATCH"
+    },
+    {
+      "name": "tampered-body",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"pong\"}",
+      "toleranceSec": 300,
+      "expected": "SIGNATURE_MISMATCH"
+    },
+    {
+      "name": "reserialised-body",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\n \"id\": \"evt_1\",\n \"type\": \"ping\"\n}",
+      "toleranceSec": 300,
+      "expected": "SIGNATURE_MISMATCH"
+    },
+    {
+      "name": "timestamp-moved",
+      "header": "t=1764064801,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "SIGNATURE_MISMATCH"
+    },
+    {
+      "name": "missing-header",
+      "header": "",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "MISSING_HEADER"
+    },
+    {
+      "name": "no-secrets",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "NO_SECRETS"
+    },
+    {
+      "name": "empty-secret-only",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        ""
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "NO_SECRETS"
+    },
+    {
+      "name": "garbage-header",
+      "header": "garbage",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "MALFORMED_HEADER"
+    },
+    {
+      "name": "no-v1",
+      "header": "t=1764064800",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "MALFORMED_HEADER"
+    },
+    {
+      "name": "non-numeric-t",
+      "header": "t=abc,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "MALFORMED_HEADER"
+    },
+    {
+      "name": "unknown-scheme-ignored",
+      "header": "t=1764064800,v1=2d8c9de56f2119e98f2d7a387ed72076c1ac7cc613657e59acbcd83540bc523f,v2=deadbeef",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "OK"
+    },
+    {
+      "name": "signed-but-not-json",
+      "header": "t=1764064800,v1=92819465e1f2272dc595a3b7d8c5e54c48fc7a9392b2b73cb9cf2be26952594b",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "not json",
+      "toleranceSec": 300,
+      "expected": "INVALID_JSON"
+    },
+    {
+      "name": "uppercase-hex-ignored",
+      "header": "t=1764064800,v1=2D8C9DE56F2119E98F2D7A387ED72076C1AC7CC613657E59ACBCD83540BC523F",
+      "secrets": [
+        "whsec_test_secret_1"
+      ],
+      "now": 1764064800,
+      "rawBody": "{\"id\":\"evt_1\",\"type\":\"ping\"}",
+      "toleranceSec": 300,
+      "expected": "MALFORMED_HEADER"
+    }
+  ]
+}

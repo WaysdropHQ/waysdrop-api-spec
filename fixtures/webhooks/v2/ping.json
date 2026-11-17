@@ -1,0 +1,18 @@
+{
+  "id": "evt_0193b2f4-1c2d-7a3b-9c4d-5e6f7a8b9c17",
+  "type": "ping",
+  "apiVersion": "2026-11-25",
+  "createdAt": "2026-11-25T10:30:00.000Z",
+  "livemode": true,
+  "account": {
+    "id": "0193b2f4-0000-7000-8000-0000000acc01"
+  },
+  "sequence": 24,
+  "data": {
+    "object": {
+      "object": "ping",
+      "id": "0193b2f4-0000-7000-8000-00000000a0e1",
+      "message": "Test event from Waysdrop. Your endpoint is set up correctly."
+    }
+  }
+}

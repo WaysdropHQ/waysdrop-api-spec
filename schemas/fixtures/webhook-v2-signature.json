@@ -1,0 +1,91 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://waysdrop.com/schemas/fixtures/webhook-v2-signature.json",
+    "title": "Webhook v2 signature test vectors",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "description",
+        "algorithm",
+        "header",
+        "defaultToleranceSec",
+        "errorCodes",
+        "signing",
+        "verification"
+    ],
+    "properties": {
+        "description": { "type": "string" },
+        "algorithm": { "const": "HMAC-SHA256" },
+        "header": { "const": "Waysdrop-Signature" },
+        "defaultToleranceSec": { "const": 300 },
+        "errorCodes": { "type": "array", "items": { "type": "string" } },
+        "signing": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "name",
+                    "secrets",
+                    "timestamp",
+                    "rawBody",
+                    "header"
+                ],
+                "properties": {
+                    "name": { "type": "string" },
+                    "secrets": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": { "type": "string" }
+                    },
+                    "timestamp": { "type": "integer", "minimum": 0 },
+                    "rawBody": { "type": "string" },
+                    "header": {
+                        "type": "string",
+                        "pattern": "^t=[0-9]+(,v1=[0-9a-f]{64})+$"
+                    }
+                }
+            }
+        },
+        "verification": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "name",
+                    "header",
+                    "secrets",
+                    "now",
+                    "rawBody",
+                    "toleranceSec",
+                    "expected"
+                ],
+                "properties": {
+                    "name": { "type": "string" },
+                    "header": { "type": "string" },
+                    "secrets": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                    },
+                    "now": { "type": "integer" },
+                    "rawBody": { "type": "string" },
+                    "toleranceSec": { "type": "integer", "minimum": 0 },
+                    "expected": {
+                        "enum": [
+                            "OK",
+                            "MISSING_HEADER",
+                            "MALFORMED_HEADER",
+                            "NO_SECRETS",
+                            "TIMESTAMP_OUT_OF_TOLERANCE",
+                            "SIGNATURE_MISMATCH",
+                            "INVALID_JSON"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

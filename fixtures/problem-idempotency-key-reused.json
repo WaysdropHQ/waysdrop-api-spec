@@ -1,0 +1,12 @@
+{
+    "type": "urn:waysdrop:problem:IDEMPOTENCY_KEY_REUSED",
+    "title": "Conflict",
+    "status": 409,
+    "detail": "This Idempotency-Key was already used with a different request.",
+    "instance": "/v2/checkout-sessions",
+    "code": "IDEMPOTENCY_KEY_REUSED",
+    "correlationId": "0f9a6c1e-7b8d-4c2a-9e51-3d2f1a7b6c92",
+    "statusCode": 409,
+    "message": "This Idempotency-Key was already used with a different request.",
+    "details": { "code": "IDEMPOTENCY_KEY_REUSED" }
+}

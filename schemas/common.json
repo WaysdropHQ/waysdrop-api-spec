@@ -20,7 +20,110 @@
             },
             "required": ["usd"]
         },
+        "PartnerAddress": {
+            "description": "Address object sent to partners in webhooks and /api/* responses. Frozen per D26 #14: exactly the pre-2026-11 column set; no other key is ever sent and new Address columns are added only through a versioned payload. Every key is optional (an object carries only the columns its source loaded). contactName, contactPhone, contactEmail and note are personal data sent only to keys entitled to the delivery.",
+            "type": "object",
+            "properties": {
+                "id": { "type": "string", "format": "uuid" },
+                "label": { "type": ["string", "null"] },
+                "floor": { "type": ["string", "null"] },
+                "addressLine1": { "type": "string" },
+                "addressLine2": { "type": ["string", "null"] },
+                "region": { "type": ["string", "null"] },
+                "regionName": { "type": ["string", "null"] },
+                "lgaOrCity": { "type": ["string", "null"] },
+                "zoneOrDistrict": { "type": ["string", "null"] },
+                "country": { "type": "string" },
+                "zipCode": { "type": ["string", "null"] },
+                "regionalZone": { "type": ["string", "null"] },
+                "lat": { "type": ["number", "null"] },
+                "lon": { "type": ["number", "null"] },
+                "state": { "type": ["string", "null"] },
+                "subregion": { "type": ["string", "null"] },
+                "timezone": { "type": ["string", "null"] },
+                "countryCode": { "type": ["string", "null"] },
+                "googlePlaceId": { "type": ["string", "null"] },
+                "continentCode": { "type": ["string", "null"] },
+                "continentName": { "type": ["string", "null"] },
+                "countryCodeAlpha3": { "type": ["string", "null"] },
+                "adminUnitId": { "type": ["string", "null"] },
+                "adminUnitName": { "type": ["string", "null"] },
+                "adminUnitType": { "type": ["string", "null"] },
+                "adminUnitParentId": { "type": ["string", "null"] },
+                "admin1Id": { "type": ["string", "null"] },
+                "admin1Name": { "type": ["string", "null"] },
+                "admin2Id": { "type": ["string", "null"] },
+                "admin2Name": { "type": ["string", "null"] },
+                "admin3Id": { "type": ["string", "null"] },
+                "admin3Name": { "type": ["string", "null"] },
+                "operationalRegionId": { "type": ["string", "null"] },
+                "h3Index": { "type": ["string", "null"] },
+                "phrase": { "type": ["string", "null"] },
+                "resolution": { "type": ["integer", "null"] },
+                "centerLat": { "type": ["number", "null"] },
+                "centerLon": { "type": ["number", "null"] },
+                "swLat": { "type": ["number", "null"] },
+                "swLon": { "type": ["number", "null"] },
+                "neLat": { "type": ["number", "null"] },
+                "neLon": { "type": ["number", "null"] },
+                "contactName": { "type": ["string", "null"] },
+                "contactPhone": { "type": ["string", "null"] },
+                "contactEmail": { "type": ["string", "null"] },
+                "note": { "type": ["string", "null"] },
+                "deletedAt": { "type": ["string", "null"], "format": "date-time" },
+                "createdAt": { "type": "string", "format": "date-time" },
+                "updatedAt": { "type": "string", "format": "date-time" },
+                "userId": { "type": ["string", "null"], "format": "uuid" }
+            }
+        },
+        "AddressPinSource": {
+            "type": "string",
+            "enum": ["CONFIRMED_PIN", "GPS", "PLACE", "GEOCODE"]
+        },
+        "RoutePoint": {
+            "description": "Pickup or drop-off point on POST /api/route, /api/pricing and /api/request. Those endpoints also accept a plain address string (max 255 chars).",
+            "type": "object",
+            "properties": {
+                "address": { "type": "string", "maxLength": 255 },
+                "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+                "lon": { "type": "number", "minimum": -180, "maximum": 180 },
+                "googlePlaceId": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_-]{10,512}$"
+                },
+                "pinSource": { "$ref": "#/definitions/AddressPinSource" },
+                "gpsAccuracyM": { "type": "number", "minimum": 0, "maximum": 5000 },
+                "gpsFixAt": { "type": "string", "format": "date-time" },
+                "landmark": { "type": ["string", "null"], "maxLength": 120 },
+                "deliveryInstructions": {
+                    "type": ["string", "null"],
+                    "maxLength": 500
+                }
+            }
+        },
+        "SuggestedLocation": {
+            "type": "object",
+            "properties": {
+                "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+                "lng": { "type": "number", "minimum": -180, "maximum": 180 },
+                "formattedAddress": { "type": ["string", "null"] }
+            },
+            "required": ["lat", "lng", "formattedAddress"]
+        },
+        "AddressPinMismatchDetails": {
+            "description": "details of a 422 ADDRESS_PIN_MISMATCH. On /api/* field is origin or destination, and distanceM and suggested are always sent; unauthenticated first-party callers get only code and field.",
+            "type": "object",
+            "properties": {
+                "code": { "const": "ADDRESS_PIN_MISMATCH" },
+                "field": { "type": "string", "enum": ["origin", "destination"] },
+                "distanceM": { "type": "integer", "minimum": 0 },
+                "suggested": { "$ref": "#/definitions/SuggestedLocation" }
+            },
+            "required": ["code", "field"]
+        },
         "Address": {
+            "description": "Deprecated: an untyped legacy input shape. Use RoutePoint for requests and PartnerAddress for responses.",
+            "deprecated": true,
             "type": "object",
             "properties": {
                 "address": { "type": "string" },
@@ -45,12 +148,34 @@
             "type": "object",
             "properties": {
                 "statusCode": { "type": "integer" },
-                "message": {},
+                "correlationId": { "type": "string" },
+                "method": { "type": "string" },
+                "timestamp": { "type": "string", "format": "date-time" },
                 "path": { "type": "string" },
+                "url": { "type": "string" },
+                "message": {},
                 "details": { "type": "object" },
+                "environment": { "type": "string" },
+                "ip": { "type": "string" },
+                "health": { "type": "string" },
                 "quota": { "type": "object" }
             },
             "required": ["statusCode", "message"]
+        },
+        "AddressPinMismatchError": {
+            "allOf": [
+                { "$ref": "#/definitions/ApiErrorResponse" },
+                {
+                    "type": "object",
+                    "properties": {
+                        "statusCode": { "const": 422 },
+                        "details": {
+                            "$ref": "#/definitions/AddressPinMismatchDetails"
+                        }
+                    },
+                    "required": ["details"]
+                }
+            ]
         }
     }
 }

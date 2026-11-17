@@ -1,0 +1,54 @@
+{
+  "id": "evt_0193b2f4-1c2d-7a3b-9c4d-5e6f7a8b9c0d",
+  "type": "order.accepted",
+  "apiVersion": "2026-11-25",
+  "createdAt": "2026-11-25T10:30:00.000Z",
+  "livemode": true,
+  "account": {
+    "id": "0193b2f4-0000-7000-8000-0000000acc01"
+  },
+  "sequence": 14,
+  "data": {
+    "object": {
+      "object": "order",
+      "id": "0193b2f4-0000-7000-8000-00000000e001",
+      "orderNumber": "ORD-100045",
+      "status": "CONFIRMED",
+      "fulfillmentType": "DELIVERY",
+      "deliveryId": "0193b2f4-0000-7000-8000-00000000d002",
+      "trackingId": "WD-ORD-2M4N8P",
+      "checkoutSessionId": "0193b2f4-0000-7000-8000-00000000f001",
+      "store": {
+        "id": "0193b2f4-0000-7000-8000-00000000b001",
+        "name": "Example Store"
+      },
+      "items": [
+        {
+          "id": "0193b2f4-0000-7000-8000-00000000e101",
+          "productId": "0193b2f4-0000-7000-8000-00000000e201",
+          "name": "Example product",
+          "quantity": 2,
+          "unitPrice": {
+            "amountMinor": "999",
+            "currency": "USD"
+          }
+        }
+      ],
+      "itemsTruncated": false,
+      "subtotal": {
+        "amountMinor": "1998",
+        "currency": "USD"
+      },
+      "deliveryFee": {
+        "amountMinor": "550",
+        "currency": "USD"
+      },
+      "total": {
+        "amountMinor": "2548",
+        "currency": "USD"
+      },
+      "createdAt": "2026-11-25T10:00:00.000Z",
+      "updatedAt": "2026-11-25T10:30:00.000Z"
+    }
+  }
+}

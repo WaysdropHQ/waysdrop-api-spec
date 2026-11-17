@@ -10,15 +10,17 @@ Licensed under the [MIT License](LICENSE).
 
 | Path                          | Description                                                |
 | ----------------------------- | ---------------------------------------------------------- |
-| `openapi/partner-api.yaml`    | Partner API (`/api/*`) — 18 endpoints, OpenAPI 3.1         |
+| `openapi/partner-api.yaml`    | Partner API — `/api/*` (19 ops), `/v2/checkout-sessions` + `/v2/orders` (7), `/v2/webhooks` (12); OpenAPI 3.1 |
 | `openapi/oauth-protocol.yaml` | OAuth / OIDC protocol — discovery, token, userinfo, revoke |
 | `schemas/common.json`         | Shared types (`DisplayMoney`, envelopes, errors)           |
 | `schemas/enums.json`          | Route types, delivery status, package size, etc.           |
 | `schemas/responses.json`      | Response DTO shapes                                        |
 | `schemas/oauth/`              | OAuth discovery, token, userinfo, error schemas            |
-| `schemas/webhooks/`           | Webhook envelope + 19 event payloads                       |
-| `fixtures/`                   | Shared test vectors (signature, OAuth, envelopes, errors)  |
-| `scripts/`                    | Validation and export helpers                              |
+| `schemas/webhooks/`           | Legacy `{event, data}` webhook envelope + event payloads   |
+| `schemas/webhooks/v2/`        | Webhooks v2: envelope, catalogue, 24 per-type schemas, signature docs (`README.md`) |
+| `schemas/fixtures/`           | Schemas of the shared test-vector files                    |
+| `fixtures/`                   | Shared test vectors (signatures, OAuth, envelopes, errors, webhook v2 events); `manifest.json` maps each to its schema |
+| `scripts/`                    | Zero-dependency validation (`selftest`, `lint-openapi`, `validate-fixtures`, signature vectors) and export helpers |
 
 ## Official SDKs
 
@@ -33,17 +35,21 @@ These libraries implement this spec (v1):
 | Rust                 | `waysdrop`                        | [waysdrop-rust-sdk](https://github.com/WaysdropHQ/waysdrop-rust-sdk)       |
 | Dart / Flutter       | `waysdrop`                        | [waysdrop-flutter-sdk](https://github.com/WaysdropHQ/waysdrop-flutter-sdk) |
 
-OAuth (Sign in with Waysdrop) schemas will land here in **v2** before SDK OAuth modules ship.
+OAuth (Sign in with Waysdrop) is specified in `openapi/oauth-protocol.yaml` and `schemas/oauth/`.
 
 ## Validation
 
 ```bash
 chmod +x scripts/*.sh
-./scripts/validate-schemas.sh
-node scripts/compute-signature-fixture.js
+./scripts/validate-schemas.sh            # everything below, in order
+node scripts/selftest.js                 # tests the zero-dependency YAML parser and JSON Schema validator
+node scripts/lint-openapi.js             # refs, operationIds, path params, security, x-error-codes ⊆ ErrorCode
+node scripts/validate-fixtures.js        # every fixture against its schema (fixtures/manifest.json)
+node scripts/compute-signature-fixture.js          # verify signature vectors
+node scripts/compute-signature-fixture.js --write  # regenerate them (intentional changes only)
 ```
 
-CI runs the same checks on every push to `main`.
+Node ≥ 18 and nothing else: no `npm install`. CI runs the same checks on every push and pull request.
 
 ## Export from running server
 
@@ -55,23 +61,19 @@ SWAGGER_API_PASS=your_password ./scripts/export-openapi.sh
 
 Only commit changes that reflect intentional API updates.
 
-## Webhook signature
+## Webhook signatures
 
-Waysdrop signs outbound webhooks with:
+**v2** (endpoints with `format: "v2"`): `Waysdrop-Signature: t=<unix seconds>,v1=<hex HMAC-SHA256(endpoint secret, t + "." + rawBody)>[,v1=…]`, one `v1` per active secret during a rotation, 300 s tolerance. Full rules and error codes: `schemas/webhooks/v2/README.md`; vectors: `fixtures/webhooks/v2/signature.json`.
 
-```
-HMAC-SHA256(rawBody, apiKey) → hex digest
-```
+**Legacy** (`{event, data}` endpoints): `x-waysdrop-signature` = hex `HMAC-SHA256(rawBody, apiSecretKey)`, no timestamp. Vector: `fixtures/signature.json`.
 
-Header: `x-waysdrop-signature`
-
-Verify against **raw request bytes**, never re-serialized JSON. The canonical test vector is `fixtures/signature.json`. Each SDK vendors a copy under its own `tests/` (or `test/`) directory for standalone CI.
+Verify against **raw request bytes**, never re-serialized JSON. Each SDK vendors the fixtures under its own `tests/` (or `test/`) directory for standalone CI.
 
 ## Proposing API changes
 
 1. Update `openapi/partner-api.yaml` and relevant files under `schemas/`.
 2. Add or update fixtures if behavior changes (especially webhook signatures).
-3. Run `./scripts/validate-schemas.sh`.
+3. Run `./scripts/validate-schemas.sh`. Add every new fixture to `fixtures/manifest.json`, list every error code an operation can return in its `x-error-codes` and in `components.schemas.ErrorCode` (enum + `x-enum-descriptions`); the lint fails when they drift.
 4. Open a PR in this repo; tag a spec release (`v1.x.x`) when merged.
 5. Update affected SDKs and publish new SDK patch versions.
 
@@ -84,6 +86,7 @@ Spec releases use git tags: `v1.0.0`, `v1.1.0`, `v2.0.0` (OAuth).
 | Spec tag | Scope                            |
 | -------- | -------------------------------- |
 | v1.x     | Partner API + webhooks           |
-| v2.x     | OAuth protocol schemas (planned) |
+| v2.x     | OAuth protocol schemas           |
+| v3.x     | Waysdrop V2 (D22): `/v2` operations, webhooks v2, error model |
 
 See [CHANGELOG.md](CHANGELOG.md).

@@ -2,7 +2,7 @@ name: Contract
 
 on:
     push:
-        branches: [main, master]
+        branches: [main, master, v2]
         tags: ["v*"]
     pull_request:
 
@@ -11,22 +11,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+            # Zero-dependency gates (no npm install): validator self-test, OpenAPI lint,
+            # every fixture against its schema, and the webhook signature vectors.
             - run: chmod +x scripts/*.sh && ./scripts/validate-schemas.sh
-            - run: node scripts/compute-signature-fixture.js
-            - name: Validate OAuth fixtures against schemas
-              run: |
-                  node -e "
-                  const fs = require('fs');
-                  const path = require('path');
-                  const root = process.cwd();
-                  const pairs = [
-                    ['fixtures/oauth-discovery.json', 'schemas/oauth/discovery.json'],
-                    ['fixtures/oauth-token-response.json', 'schemas/oauth/token-response.json'],
-                    ['fixtures/oauth-userinfo-profile.json', 'schemas/oauth/userinfo-response.json'],
-                  ];
-                  for (const [fixture, schemaPath] of pairs) {
-                    JSON.parse(fs.readFileSync(path.join(root, fixture), 'utf8'));
-                    JSON.parse(fs.readFileSync(path.join(root, schemaPath), 'utf8'));
-                  }
-                  console.log('OAuth fixture smoke check passed');
-                  "
+            - name: Fail if the signature vectors are stale
+              run: git diff --exit-code -- fixtures/

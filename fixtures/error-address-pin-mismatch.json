@@ -1,0 +1,22 @@
+{
+    "statusCode": 422,
+    "correlationId": "0f9a6c1e-7b8d-4c2a-9e51-3d2f1a7b6c90",
+    "method": "POST",
+    "timestamp": "2026-11-17T09:30:00.000Z",
+    "path": "/api/request",
+    "url": "https://api.waysdrop.com/api/request",
+    "message": "The pin is far from the address you entered. Please confirm the pin on the map.",
+    "details": {
+        "code": "ADDRESS_PIN_MISMATCH",
+        "field": "destination",
+        "distanceM": 7342,
+        "suggested": {
+            "lat": 6.4474,
+            "lng": 3.47,
+            "formattedAddress": "45 Admiralty Way, Lekki Phase 1, Lagos, Nigeria"
+        }
+    },
+    "environment": "live",
+    "ip": "203.0.113.10",
+    "health": "https://api.waysdrop.com/health/status"
+}

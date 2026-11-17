@@ -1,0 +1,227 @@
+{
+  "$comment": "Machine-readable catalogue of Waysdrop webhook v2 event types. Source: waysdrop-server src/modules/partner-webhooks/catalogue.ts (branch v2-webhooks). status \"reserved\" = the payload builder and schema exist but the server has no emitter at launch; subscribe to it now, events arrive once the emitter ships.",
+  "apiVersions": [
+    "2026-11-25"
+  ],
+  "currentApiVersion": "2026-11-25",
+  "signatureHeader": "Waysdrop-Signature",
+  "eventIdHeader": "Waysdrop-Event-Id",
+  "types": [
+    {
+      "type": "delivery.created",
+      "object": "delivery",
+      "description": "A delivery was created through the API.",
+      "emittedWhen": "A P2P or errand delivery is created through the API.",
+      "status": "emitted",
+      "schema": "delivery.created.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.created.json"
+    },
+    {
+      "type": "delivery.assigned",
+      "object": "delivery",
+      "description": "A courier accepted the delivery.",
+      "emittedWhen": "A courier accepts.",
+      "status": "emitted",
+      "schema": "delivery.assigned.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.assigned.json"
+    },
+    {
+      "type": "delivery.collected",
+      "object": "delivery",
+      "description": "The courier collected the package.",
+      "emittedWhen": "Pickup proof validated (same transaction).",
+      "status": "emitted",
+      "schema": "delivery.collected.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.collected.json"
+    },
+    {
+      "type": "delivery.in_transit",
+      "object": "delivery",
+      "description": "The courier is on the way to the drop-off.",
+      "emittedWhen": "The courier starts the route (same transaction).",
+      "status": "emitted",
+      "schema": "delivery.in_transit.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.in_transit.json"
+    },
+    {
+      "type": "delivery.delivered",
+      "object": "delivery",
+      "description": "The delivery was completed.",
+      "emittedWhen": "Delivery proof validated (same transaction).",
+      "status": "emitted",
+      "schema": "delivery.delivered.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.delivered.json"
+    },
+    {
+      "type": "delivery.partially_delivered",
+      "object": "delivery",
+      "description": "Some drop-offs of a multi-stop delivery are completed.",
+      "emittedWhen": "Some drop-offs of a multi-stop job are done (WS3).",
+      "status": "reserved",
+      "schema": "delivery.partially_delivered.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.partially_delivered.json"
+    },
+    {
+      "type": "delivery.cancelled",
+      "object": "delivery",
+      "description": "The delivery was cancelled.",
+      "emittedWhen": "The delivery is cancelled.",
+      "status": "emitted",
+      "schema": "delivery.cancelled.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.cancelled.json"
+    },
+    {
+      "type": "delivery.failed",
+      "object": "delivery",
+      "description": "The delivery failed and will not be completed.",
+      "emittedWhen": "The delivery fails terminally (WS3).",
+      "status": "reserved",
+      "schema": "delivery.failed.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.failed.json"
+    },
+    {
+      "type": "delivery.stop.arrived",
+      "object": "delivery_stop",
+      "description": "The courier arrived at a stop.",
+      "emittedWhen": "Courier arrived at a stop (WS3).",
+      "status": "reserved",
+      "schema": "delivery.stop.arrived.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.stop.arrived.json"
+    },
+    {
+      "type": "delivery.stop.completed",
+      "object": "delivery_stop",
+      "description": "A stop handover was completed.",
+      "emittedWhen": "Stop handover done (WS3).",
+      "status": "reserved",
+      "schema": "delivery.stop.completed.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.stop.completed.json"
+    },
+    {
+      "type": "delivery.stop.failed",
+      "object": "delivery_stop",
+      "description": "A stop could not be completed.",
+      "emittedWhen": "Stop failed (WS3).",
+      "status": "reserved",
+      "schema": "delivery.stop.failed.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.stop.failed.json"
+    },
+    {
+      "type": "delivery.plan.changed",
+      "object": "delivery_plan",
+      "description": "Stops were added, removed or re-ordered.",
+      "emittedWhen": "Stops added, removed or re-ordered (WS3).",
+      "status": "reserved",
+      "schema": "delivery.plan.changed.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/delivery.plan.changed.json"
+    },
+    {
+      "type": "order.created",
+      "object": "order",
+      "description": "An order was placed and paid.",
+      "emittedWhen": "An order is placed and paid.",
+      "status": "emitted",
+      "schema": "order.created.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/order.created.json"
+    },
+    {
+      "type": "order.accepted",
+      "object": "order",
+      "description": "The store accepted the order.",
+      "emittedWhen": "The store accepts.",
+      "status": "emitted",
+      "schema": "order.accepted.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/order.accepted.json"
+    },
+    {
+      "type": "order.declined",
+      "object": "order",
+      "description": "The store declined the order.",
+      "emittedWhen": "The store declines.",
+      "status": "emitted",
+      "schema": "order.declined.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/order.declined.json"
+    },
+    {
+      "type": "order.ready",
+      "object": "order",
+      "description": "The order is ready for pickup.",
+      "emittedWhen": "Ready for pickup.",
+      "status": "reserved",
+      "schema": "order.ready.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/order.ready.json"
+    },
+    {
+      "type": "order.cancelled",
+      "object": "order",
+      "description": "The order was cancelled.",
+      "emittedWhen": "Cancelled by buyer, store or sweep.",
+      "status": "emitted",
+      "schema": "order.cancelled.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/order.cancelled.json"
+    },
+    {
+      "type": "order.completed",
+      "object": "order",
+      "description": "The order was delivered.",
+      "emittedWhen": "Its delivery is delivered (same transaction; v2 endpoints only).",
+      "status": "emitted",
+      "schema": "order.completed.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/order.completed.json"
+    },
+    {
+      "type": "checkout.paid",
+      "object": "checkout_session",
+      "description": "A checkout was paid.",
+      "emittedWhen": "A V2 checkout is paid (wallet or hosted).",
+      "status": "emitted",
+      "schema": "checkout.paid.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/checkout.paid.json"
+    },
+    {
+      "type": "checkout.cancelled",
+      "object": "checkout_session",
+      "description": "Every order of a checkout was cancelled or declined.",
+      "emittedWhen": "Every child order ended cancelled or declined (v2 endpoints only).",
+      "status": "emitted",
+      "schema": "checkout.cancelled.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/checkout.cancelled.json"
+    },
+    {
+      "type": "payment.succeeded",
+      "object": "payment",
+      "description": "A payment succeeded.",
+      "emittedWhen": "A payment for the partner's order or delivery succeeds.",
+      "status": "emitted",
+      "schema": "payment.succeeded.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/payment.succeeded.json"
+    },
+    {
+      "type": "payment.failed",
+      "object": "payment",
+      "description": "A payment failed.",
+      "emittedWhen": "A payment fails.",
+      "status": "reserved",
+      "schema": "payment.failed.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/payment.failed.json"
+    },
+    {
+      "type": "payment.refunded",
+      "object": "payment",
+      "description": "A refund was processed.",
+      "emittedWhen": "A refund is processed.",
+      "status": "emitted",
+      "schema": "payment.refunded.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/payment.refunded.json"
+    },
+    {
+      "type": "ping",
+      "object": "ping",
+      "description": "A test event sent on request.",
+      "emittedWhen": "POST /v2/webhooks/endpoints/{id}/ping.",
+      "status": "emitted",
+      "schema": "ping.v1.json",
+      "fixture": "../../../fixtures/webhooks/v2/ping.json"
+    }
+  ]
+}

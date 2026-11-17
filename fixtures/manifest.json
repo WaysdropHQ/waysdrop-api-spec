@@ -1,0 +1,267 @@
+{
+  "$comment": "Fixture → schema map. scripts/validate-fixtures.js validates every entry and fails on any fixture not listed here. `at` = JSON pointer inside the fixture.",
+  "fixtures": [
+    {
+      "fixture": "fixtures/oauth-discovery.json",
+      "schema": "schemas/oauth/discovery.json"
+    },
+    {
+      "fixture": "fixtures/oauth-token-response.json",
+      "schema": "schemas/oauth/token-response.json"
+    },
+    {
+      "fixture": "fixtures/oauth-userinfo-profile.json",
+      "schema": "schemas/oauth/userinfo-response.json"
+    },
+    {
+      "fixture": "fixtures/oauth-pkce.json",
+      "schema": "schemas/fixtures/oauth-pkce.json"
+    },
+    {
+      "fixture": "fixtures/signature.json",
+      "schema": "schemas/webhooks/envelope.json",
+      "at": "/payload"
+    },
+    {
+      "fixture": "fixtures/signature.json",
+      "schema": "schemas/webhooks/events.json",
+      "at": "/payload"
+    },
+    {
+      "fixture": "fixtures/partner-address.json",
+      "schema": "schemas/common.json#/definitions/PartnerAddress"
+    },
+    {
+      "fixture": "fixtures/partner-address.json",
+      "schema": "openapi/partner-api.yaml#/components/schemas/PartnerAddress"
+    },
+    {
+      "fixture": "fixtures/error-address-pin-mismatch.json",
+      "schema": "schemas/common.json#/definitions/AddressPinMismatchError"
+    },
+    {
+      "fixture": "fixtures/error-address-pin-mismatch.json",
+      "schema": "openapi/partner-api.yaml#/components/schemas/AddressPinMismatchError"
+    },
+    {
+      "fixture": "fixtures/error-quota.json",
+      "schema": "openapi/partner-api.yaml#/components/schemas/ApiErrorResponse"
+    },
+    {
+      "fixture": "fixtures/error-quota.json",
+      "schema": "schemas/common.json#/definitions/ApiErrorResponse"
+    },
+    {
+      "fixture": "fixtures/success-envelope.json",
+      "schema": "openapi/partner-api.yaml#/components/schemas/ApiSuccessResponse"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/signature.json",
+      "schema": "schemas/fixtures/webhook-v2-signature.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.created.json",
+      "schema": "schemas/webhooks/v2/delivery.created.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.created.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.assigned.json",
+      "schema": "schemas/webhooks/v2/delivery.assigned.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.assigned.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.collected.json",
+      "schema": "schemas/webhooks/v2/delivery.collected.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.collected.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.in_transit.json",
+      "schema": "schemas/webhooks/v2/delivery.in_transit.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.in_transit.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.delivered.json",
+      "schema": "schemas/webhooks/v2/delivery.delivered.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.delivered.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.partially_delivered.json",
+      "schema": "schemas/webhooks/v2/delivery.partially_delivered.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.partially_delivered.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.cancelled.json",
+      "schema": "schemas/webhooks/v2/delivery.cancelled.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.cancelled.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.failed.json",
+      "schema": "schemas/webhooks/v2/delivery.failed.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.failed.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.stop.arrived.json",
+      "schema": "schemas/webhooks/v2/delivery.stop.arrived.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.stop.arrived.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.stop.completed.json",
+      "schema": "schemas/webhooks/v2/delivery.stop.completed.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.stop.completed.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.stop.failed.json",
+      "schema": "schemas/webhooks/v2/delivery.stop.failed.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.stop.failed.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.plan.changed.json",
+      "schema": "schemas/webhooks/v2/delivery.plan.changed.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/delivery.plan.changed.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.created.json",
+      "schema": "schemas/webhooks/v2/order.created.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.created.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.accepted.json",
+      "schema": "schemas/webhooks/v2/order.accepted.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.accepted.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.declined.json",
+      "schema": "schemas/webhooks/v2/order.declined.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.declined.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.ready.json",
+      "schema": "schemas/webhooks/v2/order.ready.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.ready.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.cancelled.json",
+      "schema": "schemas/webhooks/v2/order.cancelled.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.cancelled.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.completed.json",
+      "schema": "schemas/webhooks/v2/order.completed.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/order.completed.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/checkout.paid.json",
+      "schema": "schemas/webhooks/v2/checkout.paid.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/checkout.paid.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/checkout.cancelled.json",
+      "schema": "schemas/webhooks/v2/checkout.cancelled.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/checkout.cancelled.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/payment.succeeded.json",
+      "schema": "schemas/webhooks/v2/payment.succeeded.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/payment.succeeded.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/payment.failed.json",
+      "schema": "schemas/webhooks/v2/payment.failed.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/payment.failed.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/payment.refunded.json",
+      "schema": "schemas/webhooks/v2/payment.refunded.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/payment.refunded.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/ping.json",
+      "schema": "schemas/webhooks/v2/ping.v1.json"
+    },
+    {
+      "fixture": "fixtures/webhooks/v2/ping.json",
+      "schema": "schemas/webhooks/v2/envelope.json"
+    },
+    {
+      "fixture": "fixtures/problem-idempotency-key-reused.json",
+      "schema": "openapi/partner-api.yaml#/components/schemas/Problem"
+    },
+    {
+      "fixture": "fixtures/problem-rate-limited-quota.json",
+      "schema": "openapi/partner-api.yaml#/components/schemas/Problem"
+    },
+    {
+      "fixture": "fixtures/problem-validation-failed.json",
+      "schema": "openapi/partner-api.yaml#/components/schemas/Problem"
+    }
+  ]
+}
