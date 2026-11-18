@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.waysdrop.com/schemas/webhooks/envelope.v1.json",
+  "title": "Waysdrop webhook v2 envelope (any event type)",
+  "description": "The body of every v2 webhook (apiVersion 2026-11-25). Use the per-type schema <type>.v1.json for the exact data.object. Delivery is at least once: dedupe on id. sequence is monotonic per resource (data.object.object + data.object.id): ignore an event whose sequence is lower than one already applied.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "apiVersion",
+    "createdAt",
+    "livemode",
+    "account",
+    "sequence",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^evt_[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "evt_<uuidv7>; equals the Waysdrop-Event-Id header. The dedupe key."
+    },
+    "type": {
+      "$ref": "#/$defs/EventType"
+    },
+    "apiVersion": {
+      "enum": [
+        "2026-11-25"
+      ]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the change committed (UTC, ms precision)."
+    },
+    "livemode": {
+      "type": "boolean",
+      "description": "true on the live API, false on staging."
+    },
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "object"
+      ],
+      "properties": {
+        "object": {
+          "type": "object",
+          "required": [
+            "object",
+            "id"
+          ],
+          "properties": {
+            "object": {
+              "enum": [
+                "delivery",
+                "delivery_stop",
+                "delivery_plan",
+                "order",
+                "checkout_session",
+                "payment",
+                "ping"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "previous": {
+          "type": "object",
+          "description": "Changed fields only, when known"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "EventType": {
+      "type": "string",
+      "enum": [
+        "delivery.created",
+        "delivery.assigned",
+        "delivery.collected",
+        "delivery.in_transit",
+        "delivery.delivered",
+        "delivery.partially_delivered",
+        "delivery.cancelled",
+        "delivery.failed",
+        "delivery.stop.arrived",
+        "delivery.stop.completed",
+        "delivery.stop.failed",
+        "delivery.plan.changed",
+        "order.created",
+        "order.accepted",
+        "order.declined",
+        "order.ready",
+        "order.cancelled",
+        "order.completed",
+        "checkout.paid",
+        "checkout.cancelled",
+        "payment.succeeded",
+        "payment.failed",
+        "payment.refunded",
+        "ping"
+      ]
+    }
+  }
+}

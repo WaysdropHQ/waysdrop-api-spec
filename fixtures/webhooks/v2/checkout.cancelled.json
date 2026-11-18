@@ -1,0 +1,30 @@
+{
+  "id": "evt_0193b2f4-1c2d-7a3b-9c4d-5e6f7a8b9c13",
+  "type": "checkout.cancelled",
+  "apiVersion": "2026-11-25",
+  "createdAt": "2026-11-25T10:30:00.000Z",
+  "livemode": true,
+  "account": {
+    "id": "0193b2f4-0000-7000-8000-0000000acc01"
+  },
+  "sequence": 20,
+  "data": {
+    "object": {
+      "object": "checkout_session",
+      "id": "0193b2f4-0000-7000-8000-00000000f001",
+      "status": "PAID",
+      "total": {
+        "amountMinor": "4500",
+        "currency": "USD"
+      },
+      "orderIds": [
+        "0193b2f4-0000-7000-8000-00000000e001",
+        "0193b2f4-0000-7000-8000-00000000e002"
+      ],
+      "paymentReference": "PAY-0001",
+      "paidAt": "2026-11-25T10:30:00.000Z",
+      "cancelledAt": null,
+      "createdAt": "2026-11-25T10:00:00.000Z"
+    }
+  }
+}

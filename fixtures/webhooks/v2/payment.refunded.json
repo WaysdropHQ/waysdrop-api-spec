@@ -1,0 +1,27 @@
+{
+  "id": "evt_0193b2f4-1c2d-7a3b-9c4d-5e6f7a8b9c16",
+  "type": "payment.refunded",
+  "apiVersion": "2026-11-25",
+  "createdAt": "2026-11-25T10:30:00.000Z",
+  "livemode": true,
+  "account": {
+    "id": "0193b2f4-0000-7000-8000-0000000acc01"
+  },
+  "sequence": 23,
+  "data": {
+    "object": {
+      "object": "payment",
+      "id": "0193b2f4-0000-7000-8000-000000001001",
+      "reference": "TXN-0001",
+      "kind": "payment",
+      "status": "SUCCESS",
+      "amount": {
+        "amountMinor": "2548",
+        "currency": "USD"
+      },
+      "orderId": "0193b2f4-0000-7000-8000-00000000e001",
+      "deliveryId": "0193b2f4-0000-7000-8000-00000000d002",
+      "createdAt": "2026-11-25T10:30:00.000Z"
+    }
+  }
+}

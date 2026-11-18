@@ -1,0 +1,44 @@
+{
+  "id": "evt_0193b2f4-1c2d-7a3b-9c4d-5e6f7a8b9c0a",
+  "type": "delivery.stop.failed",
+  "apiVersion": "2026-11-25",
+  "createdAt": "2026-11-25T10:30:00.000Z",
+  "livemode": true,
+  "account": {
+    "id": "0193b2f4-0000-7000-8000-0000000acc01"
+  },
+  "sequence": 11,
+  "data": {
+    "object": {
+      "object": "delivery_stop",
+      "id": "0193b2f4-0000-7000-8000-000000005001",
+      "deliveryId": "0193b2f4-0000-7000-8000-00000000d001",
+      "trackingId": "WD-P2P-7Q2K9X",
+      "sequence": 1,
+      "kind": "DROPOFF",
+      "status": "COMPLETED",
+      "address": {
+        "id": "0193b2f4-0000-7000-8000-00000000a002",
+        "label": null,
+        "addressLine1": "3 Sample Close",
+        "addressLine2": null,
+        "floor": "2",
+        "city": "Lekki",
+        "state": "Lagos",
+        "region": "Lagos",
+        "country": "Nigeria",
+        "countryCode": "NG",
+        "zipCode": "100001",
+        "lat": 6.6018,
+        "lng": 3.3515,
+        "contactName": "Recipient (partner-supplied)",
+        "contactPhone": "+2340000000000",
+        "contactEmail": null,
+        "note": null
+      },
+      "arrivedAt": "2026-11-25T10:00:00.000Z",
+      "completedAt": "2026-11-25T10:30:00.000Z",
+      "failedReason": null
+    }
+  }
+}

@@ -22,10 +22,21 @@ required_partner_paths=(
   "/api/exchange-rate"
   "/api/convert"
   "/api/deliveries"
+  "/api/deliveries/{deliveryId}"
+  "/api/request/{deliveryId}/cancel"
+  "/api/package/{packageId}"
+  "/api/payments/by-external-reference/{externalReference}"
+  "/v2/checkout-sessions"
+  "/v2/checkout-sessions/{id}"
+  "/v2/checkout-sessions/{id}/confirm"
+  "/v2/orders/{orderId}/cancel"
+  "/v2/webhooks/endpoints"
+  "/v2/webhooks/endpoints/{id}"
+  "/v2/webhooks/deliveries/{id}/resend"
 )
 
 required_oauth_paths=(
-  "/.well-known/openid-configuration"
+  "/oauth/.well-known/openid-configuration"
   "/oauth/authorize"
   "/oauth/token"
   "/oauth/revoke"
@@ -50,7 +61,7 @@ required_oauth_fixtures=(
 
 echo "Validating partner-api.yaml paths..."
 for path in "${required_partner_paths[@]}"; do
-  if ! grep -q "$path:" "$PARTNER_SPEC"; then
+  if ! grep -qF "    $path:" "$PARTNER_SPEC"; then
     echo "MISSING path: $path"
     exit 1
   fi
@@ -58,7 +69,7 @@ done
 
 echo "Validating oauth-protocol.yaml paths..."
 for path in "${required_oauth_paths[@]}"; do
-  if ! grep -q "$path:" "$OAUTH_SPEC"; then
+  if ! grep -qF "    $path:" "$OAUTH_SPEC"; then
     echo "MISSING OAuth path: $path"
     exit 1
   fi
@@ -99,9 +110,21 @@ event_count=$(node -e "
   const e = require('$EVENTS');
   console.log(e.definitions.WebhookEventName.enum.length);
 ")
-if [[ "$event_count" -lt 19 ]]; then
-  echo "Expected at least 19 webhook events, found $event_count"
+if [[ "$event_count" -lt 22 ]]; then
+  echo "Expected at least 22 legacy webhook events, found $event_count"
   exit 1
 fi
+
+echo "Self-testing the zero-dependency validators..."
+node "$ROOT/scripts/selftest.js"
+
+echo "Linting OpenAPI documents..."
+node "$ROOT/scripts/lint-openapi.js"
+
+echo "Validating every fixture against its schema..."
+node "$ROOT/scripts/validate-fixtures.js"
+
+echo "Verifying webhook signature vectors (legacy + v2)..."
+node "$ROOT/scripts/compute-signature-fixture.js"
 
 echo "Contract validation passed."

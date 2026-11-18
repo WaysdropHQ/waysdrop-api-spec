@@ -15,11 +15,15 @@ tags:
     - name: OAuth
       description: Integrator-facing OAuth protocol
 paths:
-    /.well-known/openid-configuration:
+    /oauth/.well-known/openid-configuration:
         get:
             tags: [OAuth]
             operationId: getOpenIdConfiguration
             summary: OpenID Connect discovery document
+            description: |
+                Served under `/oauth/` (server `@Controller('oauth')`), not at the host root.
+                Read `issuer` and the endpoint URLs from the document instead of building them.
+            security: []
             responses:
                 "200":
                     description: Discovery document
@@ -32,6 +36,7 @@ paths:
             tags: [OAuth]
             operationId: oauthAuthorize
             summary: OAuth authorization endpoint (browser redirect)
+            security: []
             description: |
                 Redirect the user's browser here. Do not call from server-side SDK HTTP clients.
             parameters:
@@ -78,6 +83,7 @@ paths:
             tags: [OAuth]
             operationId: oauthToken
             summary: Exchange authorization code or refresh token
+            security: []
             requestBody:
                 required: true
                 content:
@@ -108,6 +114,7 @@ paths:
             tags: [OAuth]
             operationId: oauthRevoke
             summary: Revoke a refresh token
+            security: []
             requestBody:
                 required: true
                 content:

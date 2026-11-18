@@ -27,19 +27,13 @@
                 "etaSeconds": { "type": "number" }
             }
         },
+        "PartnerAddress": {
+            "$ref": "common.json#/definitions/PartnerAddress"
+        },
         "GeoLocation": {
-            "type": "object",
-            "properties": {
-                "id": { "type": "string" },
-                "addressLine1": { "type": "string" },
-                "lgaOrCity": { "type": "string" },
-                "state": { "type": "string" },
-                "country": { "type": "string" },
-                "countryCode": { "type": "string" },
-                "lat": { "type": "number" },
-                "lon": { "type": "number" },
-                "googlePlaceId": { "type": "string" }
-            }
+            "description": "Deprecated alias of PartnerAddress (the origin/destination of POST /api/route).",
+            "deprecated": true,
+            "$ref": "common.json#/definitions/PartnerAddress"
         },
         "PaginatedMeta": {
             "type": "object",

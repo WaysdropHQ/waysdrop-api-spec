@@ -1,10 +1,21 @@
 {
     "statusCode": 429,
-    "message": "API quota exceeded",
+    "correlationId": "0f9a6c1e-7b8d-4c2a-9e51-3d2f1a7b6c91",
+    "method": "POST",
+    "timestamp": "2026-11-17T09:30:00.000Z",
     "path": "/api/request",
-    "quota": {
-        "limit": 1000,
-        "used": 1000,
-        "resetAt": "2026-09-01T00:00:00.000Z"
-    }
+    "url": "https://api.waysdrop.com/api/request",
+    "message": "API quota exceeded",
+    "details": {
+        "error": "Too Many Requests",
+        "quota": {
+            "limit": 1000,
+            "remaining": 0,
+            "resetAt": "2026-12-01T00:00:00.000Z",
+            "resetIn": 1261800
+        }
+    },
+    "environment": "live",
+    "ip": "203.0.113.10",
+    "health": "https://api.waysdrop.com/health/status"
 }

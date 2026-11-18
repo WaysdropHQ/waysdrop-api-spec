@@ -1,0 +1,78 @@
+{
+  "id": "evt_0193b2f4-1c2d-7a3b-9c4d-5e6f7a8b9c05",
+  "type": "delivery.partially_delivered",
+  "apiVersion": "2026-11-25",
+  "createdAt": "2026-11-25T10:30:00.000Z",
+  "livemode": true,
+  "account": {
+    "id": "0193b2f4-0000-7000-8000-0000000acc01"
+  },
+  "sequence": 6,
+  "data": {
+    "object": {
+      "object": "delivery",
+      "id": "0193b2f4-0000-7000-8000-00000000d001",
+      "trackingId": "WD-P2P-7Q2K9X",
+      "externalReference": "partner-order-1001",
+      "type": "P2P",
+      "status": "PACKAGE_COLLECTED",
+      "routeType": "INTER_CITY",
+      "pickup": {
+        "id": "0193b2f4-0000-7000-8000-00000000a001",
+        "label": "Warehouse",
+        "addressLine1": "12 Example Street",
+        "addressLine2": null,
+        "floor": "2",
+        "city": "Ikeja",
+        "state": "Lagos",
+        "region": "Lagos",
+        "country": "Nigeria",
+        "countryCode": "NG",
+        "zipCode": "100001",
+        "lat": 6.6018,
+        "lng": 3.3515,
+        "contactName": "Dispatch desk",
+        "contactPhone": "+2340000000000",
+        "contactEmail": "dispatch@partner.example",
+        "note": "Ring the bell"
+      },
+      "dropoff": {
+        "id": "0193b2f4-0000-7000-8000-00000000a002",
+        "label": null,
+        "addressLine1": "3 Sample Close",
+        "addressLine2": null,
+        "floor": "2",
+        "city": "Lekki",
+        "state": "Lagos",
+        "region": "Lagos",
+        "country": "Nigeria",
+        "countryCode": "NG",
+        "zipCode": "100001",
+        "lat": 6.6018,
+        "lng": 3.3515,
+        "contactName": "Recipient (partner-supplied)",
+        "contactPhone": "+2340000000000",
+        "contactEmail": null,
+        "note": null
+      },
+      "courier": {
+        "id": "0193b2f4-0000-7000-8000-00000000c001"
+      },
+      "fee": {
+        "amountMinor": "1250",
+        "currency": "USD"
+      },
+      "total": {
+        "amountMinor": "1500",
+        "currency": "USD"
+      },
+      "orderId": null,
+      "checkoutSessionId": null,
+      "createdAt": "2026-11-25T10:00:00.000Z",
+      "assignedAt": "2026-11-25T10:00:00.000Z",
+      "collectedAt": "2026-11-25T10:30:00.000Z",
+      "deliveredAt": null,
+      "updatedAt": "2026-11-25T10:30:00.000Z"
+    }
+  }
+}
